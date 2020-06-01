@@ -13,7 +13,7 @@ public class ThreadPoolFactory {
 
     private static final Logger logger = LoggerFactory.getLogger(ThreadPoolFactory.class);
 
-    public static final ConcurrentHashMap<String, ThreadPoolExecutor> CACHE = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, ThreadPoolExecutor> CACHE = new ConcurrentHashMap<>();
 
     /**
      * 获取线程池
@@ -100,6 +100,7 @@ public class ThreadPoolFactory {
                 logger.error("close threadpool exception", e);
                 threadPoolExecutor.shutdownNow();
             }
+            logger.info("threadPool={} shutdown finish", threadName);
         }));
         return threadPoolExecutor;
     }
@@ -109,11 +110,19 @@ public class ThreadPoolFactory {
         return (ScheduledThreadPoolExecutor) CACHE.getOrDefault(threadName, initScheduled(threadName, coreSize));
     }
 
-
+    /**
+     * 初始化定时执行线程池
+     *
+     * @param threadName 线程池名称
+     * @param coreSize   核心线程数
+     * @return 定时任务执行线程池
+     */
     private static ScheduledThreadPoolExecutor initScheduled(String threadName, int coreSize) {
         ScheduledThreadPoolExecutor threadPoolExecutor =
             new ScheduledThreadPoolExecutor(coreSize, new NamedThreadFactory(threadName));
         threadPoolExecutor.setMaximumPoolSize(coreSize);
+        threadPoolExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardPolicy());
+        //添加进程结束时的钩子函数
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             if (threadPoolExecutor.isShutdown()) {
                 logger.warn("thread pool is shutdown");
@@ -126,6 +135,7 @@ public class ThreadPoolFactory {
                 logger.error("close threadpool exception", e);
                 threadPoolExecutor.shutdownNow();
             }
+            logger.info("threadPool={} shutdown finish", threadName);
         }));
         return threadPoolExecutor;
     }
