@@ -94,7 +94,7 @@ public class SnowflakeIdGen {
     /**
      * 当前的时间
      *
-     * @return
+     * @return 返回根据时间戳
      */
     private long currentBaseTime() {
         long baseTimeEpoch = baseBackupMills - fixStepMills;
