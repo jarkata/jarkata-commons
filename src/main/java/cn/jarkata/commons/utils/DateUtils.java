@@ -33,6 +33,19 @@ public class DateUtils {
     }
 
     /**
+     * 转换位LocalDate
+     *
+     * @param timestamp 时间戳
+     * @return 返回localdate对象
+     */
+    public static LocalDate toLocalDate(long timestamp) {
+        if (timestamp <= 0) {
+            return null;
+        }
+        return Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDate();
+    }
+
+    /**
      * yyyy-MM-dd格式的日期解析为LocalDate
      *
      * @param localDateStr yyyy-MM-dd格式的日期
@@ -68,20 +81,6 @@ public class DateUtils {
             return null;
         }
         return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-    }
-
-
-    /**
-     * 转换位LocalDate
-     *
-     * @param timestamp 时间戳
-     * @return 返回localdate对象
-     */
-    public static LocalDate toLocalDate(long timestamp) {
-        if (timestamp <= 0) {
-            return null;
-        }
-        return Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
     /**
