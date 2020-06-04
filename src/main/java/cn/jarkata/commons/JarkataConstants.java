@@ -8,4 +8,7 @@ public class JarkataConstants {
 
     public static final int DEFAULT_THREAD_TASK_TIMEOUT = 10;
 
+    public static final String LOCALHOST_KEY = "localhost";
+
+    public static final String ANYHOST_VALUE = "0.0.0.0";
 }

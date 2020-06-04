@@ -1,4 +1,4 @@
-package cn.jarkata.commons.date;
+package cn.jarkata.commons.utils;
 
 import cn.jarkata.commons.utils.DateUtils;
 import org.junit.Assert;
