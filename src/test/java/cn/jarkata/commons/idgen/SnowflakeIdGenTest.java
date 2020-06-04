@@ -1,7 +1,6 @@
 package cn.jarkata.commons.idgen;
 
-import cn.jarkata.commons.date.DateUtils;
-import org.junit.Assert;
+import cn.jarkata.commons.utils.DateUtils;
 import org.junit.Test;
 
 import java.time.LocalDateTime;

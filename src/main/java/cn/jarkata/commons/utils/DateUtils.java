@@ -1,7 +1,9 @@
-package cn.jarkata.commons.date;
+package cn.jarkata.commons.utils;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
+import java.time.temporal.TemporalQueries;
 import java.util.Date;
 import java.util.Objects;
 
@@ -28,6 +30,30 @@ public class DateUtils {
             return null;
         }
         return Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDateTime();
+    }
+
+    /**
+     * yyyy-MM-dd格式的日期解析为LocalDate
+     *
+     * @param localDateStr yyyy-MM-dd格式的日期
+     * @return LocalDate对象
+     */
+    public static LocalDate parseToDate(String localDateStr) {
+        TemporalAccessor temporalAccessor = DateTimeFormatter.ISO_LOCAL_DATE.parse(localDateStr);
+        return temporalAccessor.query(TemporalQueries.localDate());
+    }
+
+    /**
+     * yyyy-MM-dd'T'HH:mm:ss 格式的日期解析为LocalDateTime对象
+     *
+     * @param localDateTimeStr yyyy-MM-dd'T'HH:mm:ss
+     * @return LocalDateTime对象
+     */
+    public static LocalDateTime parseToDateTime(String localDateTimeStr) {
+        TemporalAccessor temporalAccessor = DateTimeFormatter.ISO_LOCAL_DATE_TIME.parse(localDateTimeStr);
+        LocalDate localDate = temporalAccessor.query(TemporalQueries.localDate());
+        LocalTime localTime = temporalAccessor.query(TemporalQueries.localTime());
+        return LocalDateTime.of(localDate, localTime);
     }
 
     /**

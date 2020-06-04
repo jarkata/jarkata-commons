@@ -32,7 +32,7 @@ public class ThreadPoolFactory {
      * @param poolName    线程池名称
      * @param coreSize    核心线程数
      * @param maxCoreSize 最大线程数
-     * @return
+     * @return 线程池对象
      */
     public static ThreadPoolExecutor getThreadPool(String poolName, int coreSize, int maxCoreSize) {
         return CACHE.getOrDefault(poolName, init(poolName, coreSize, maxCoreSize,
