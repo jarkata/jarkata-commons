@@ -11,4 +11,6 @@ public class JarkataConstants {
     public static final String LOCALHOST_KEY = "localhost";
 
     public static final String ANYHOST_VALUE = "0.0.0.0";
+
+    public static final String EMPTY_STR = "";
 }

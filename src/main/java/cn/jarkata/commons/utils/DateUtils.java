@@ -1,5 +1,7 @@
 package cn.jarkata.commons.utils;
 
+import cn.jarkata.commons.JarkataConstants;
+
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
@@ -16,8 +18,10 @@ public class DateUtils {
      * ISO_DATE_TIME
      */
     private static final DateTimeFormatter BASIC_ISO_DATETIME = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-
-    private static final DateTimeFormatter SHORT_ISO_DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+    /**
+     * yyyyMMdd格式
+     */
+    private static final DateTimeFormatter SHORT_ISO_DATE = DateTimeFormatter.ofPattern("yyyyMMdd");
 
     /**
      * Date Utils
@@ -131,16 +135,21 @@ public class DateUtils {
      */
     public static String toShortDate(LocalDate localDate) {
         if (Objects.isNull(localDate)) {
-            return "";
+            return JarkataConstants.EMPTY_STR;
         }
         return localDate.format(SHORT_ISO_DATE);
     }
 
     /**
+     * 转换为ISO标准日期字符串
+     *
      * @param dateTime datetime variable
      * @return yyyy-MM-ddTHH:mm:ss
      */
-    public static String toISODate(LocalDateTime dateTime) {
+    public static String toIsoDate(LocalDateTime dateTime) {
+        if (Objects.isNull(dateTime)) {
+            return JarkataConstants.EMPTY_STR;
+        }
         return dateTime.format(BASIC_ISO_DATETIME);
     }
 }
