@@ -10,20 +10,22 @@ public class NamedThreadFactory implements ThreadFactory {
     /**
      * 线程名称
      */
-    private String threadNamePrefix;
-
+    private final String threadPrefix;
+    private final ThreadGroup threadGroup;
     private static final AtomicLong threadCount = new AtomicLong(0);
 
-    private static final AtomicLong poolCount = new AtomicLong(0);
+    private static final AtomicLong POOL_SEQ = new AtomicLong(0);
 
     public NamedThreadFactory(String threadName) {
-        this.threadNamePrefix = threadName + "-" + poolCount.getAndIncrement();
+        this.threadPrefix = "pool-" + POOL_SEQ.getAndIncrement() + "-" + threadName;
+        SecurityManager s = System.getSecurityManager();
+        this.threadGroup = (s == null) ? Thread.currentThread().getThreadGroup() : s.getThreadGroup();
     }
 
     @Override
-    public Thread newThread(Runnable r) {
-        this.threadNamePrefix = threadNamePrefix + "-" + threadCount.getAndIncrement();
-        Thread thread = new Thread(threadNamePrefix);
+    public Thread newThread(Runnable runnable) {
+        String threadName = threadPrefix + "-" + threadCount.getAndIncrement();
+        Thread thread = new Thread(threadGroup, runnable, threadName, 0);
         if (thread.getPriority() != 5) {
             thread.setPriority(5);
         }
