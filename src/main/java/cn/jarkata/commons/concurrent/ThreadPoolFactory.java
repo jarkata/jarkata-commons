@@ -1,4 +1,4 @@
-package cn.jarkata.commons.pool;
+package cn.jarkata.commons.concurrent;
 
 import cn.jarkata.commons.JarkataConstants;
 import org.slf4j.Logger;

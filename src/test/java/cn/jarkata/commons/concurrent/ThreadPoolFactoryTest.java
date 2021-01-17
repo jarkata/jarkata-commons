@@ -1,11 +1,9 @@
-package cn.jarkata.commons.pool;
+package cn.jarkata.commons.concurrent;
 
 import org.junit.Test;
 
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
-
-import static org.junit.Assert.*;
 
 public class ThreadPoolFactoryTest {
 

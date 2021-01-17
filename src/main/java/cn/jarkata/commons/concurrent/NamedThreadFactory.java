@@ -1,4 +1,4 @@
-package cn.jarkata.commons.pool;
+package cn.jarkata.commons.concurrent;
 
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicLong;

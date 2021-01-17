@@ -1,4 +1,4 @@
-package cn.jarkata.commons.threadlocal;
+package cn.jarkata.commons.concurrent;
 
 /**
  * Named ThreadLocal
