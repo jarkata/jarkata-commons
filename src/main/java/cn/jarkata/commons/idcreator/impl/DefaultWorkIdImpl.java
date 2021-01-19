@@ -1,5 +1,6 @@
-package cn.jarkata.commons.idgen;
+package cn.jarkata.commons.idcreator.impl;
 
+import cn.jarkata.commons.idcreator.WorkIdFactory;
 import cn.jarkata.commons.utils.NetUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +12,7 @@ public class DefaultWorkIdImpl implements WorkIdFactory {
     private final Logger logger = LoggerFactory.getLogger(DefaultWorkIdImpl.class);
 
     @Override
-    public int getWorkId() {
+    public long createWorkId() {
         try {
             String inet4Address = NetUtils.getInet4Address();
             if (Objects.isNull(inet4Address)) {

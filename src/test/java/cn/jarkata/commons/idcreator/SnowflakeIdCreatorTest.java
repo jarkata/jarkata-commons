@@ -1,37 +1,38 @@
-package cn.jarkata.commons.idgen;
+package cn.jarkata.commons.idcreator;
 
+import cn.jarkata.commons.idcreator.impl.SnowflakeIdCreator;
 import cn.jarkata.commons.utils.DateUtils;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
 
-public class SnowflakeIdGenTest {
+public class SnowflakeIdCreatorTest {
 
     @Test
     public void getId() {
 
         LocalDateTime baseLocalTime = LocalDateTime.of(1970, 1, 1, 0, 0, 0);
         long millis = DateUtils.toMillis(baseLocalTime);
-        SnowflakeIdGen snowflakeIdGen = new SnowflakeIdGen(millis, 1, 365 * 24 * 3600 * 1000L);
+        SnowflakeIdCreator snowflakeIdCreator = new SnowflakeIdCreator();
 
-        snowflakeIdGen.setCurrentTime(LocalDateTime.of(2020, 11, 20, 12, 59, 59));
-        long id5 = snowflakeIdGen.getId();
+        snowflakeIdCreator.setCurrentTime(LocalDateTime.of(2020, 11, 20, 12, 59, 59));
+        long id5 = snowflakeIdCreator.createId(2);
         System.out.println(id5);
 
-        snowflakeIdGen.setCurrentTime(LocalDateTime.of(2020, 12, 31, 12, 59, 59));
-        long id4 = snowflakeIdGen.getId();
+        snowflakeIdCreator.setCurrentTime(LocalDateTime.of(2020, 12, 31, 12, 59, 59));
+        long id4 = snowflakeIdCreator.createId(1);
         System.out.println(id4);
 
-        snowflakeIdGen.setCurrentTime(LocalDateTime.of(2999, 12, 31, 12, 59, 59));
-        long id3 = snowflakeIdGen.getId();
+        snowflakeIdCreator.setCurrentTime(LocalDateTime.of(2999, 12, 31, 12, 59, 59));
+        long id3 = snowflakeIdCreator.createId(2);
         System.out.println(id3);
 
-        snowflakeIdGen.setCurrentTime(LocalDateTime.of(3999, 12, 31, 12, 59, 59));
-        long id2 = snowflakeIdGen.getId();
+        snowflakeIdCreator.setCurrentTime(LocalDateTime.of(3999, 12, 31, 12, 59, 59));
+        long id2 = snowflakeIdCreator.createId(2);
         System.out.println(id2);
 
-        snowflakeIdGen.setCurrentTime(LocalDateTime.of(4030, 12, 31, 12, 59, 59));
-        long id6 = snowflakeIdGen.getId();
+        snowflakeIdCreator.setCurrentTime(LocalDateTime.of(4030, 12, 31, 12, 59, 59));
+        long id6 = snowflakeIdCreator.createId(2);
         System.out.println(id6);
     }
 

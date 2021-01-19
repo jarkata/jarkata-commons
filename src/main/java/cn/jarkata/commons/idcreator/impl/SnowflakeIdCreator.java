@@ -1,5 +1,6 @@
-package cn.jarkata.commons.idgen;
+package cn.jarkata.commons.idcreator.impl;
 
+import cn.jarkata.commons.idcreator.IdCreator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,9 +9,9 @@ import java.time.ZoneId;
 import java.util.Objects;
 import java.util.Random;
 
-public class SnowflakeIdGen {
+public class SnowflakeIdCreator implements IdCreator {
 
-    private final Logger logger = LoggerFactory.getLogger(SnowflakeIdGen.class);
+    private final Logger logger = LoggerFactory.getLogger(SnowflakeIdCreator.class);
 
     /**
      * 基线时间
@@ -47,8 +48,6 @@ public class SnowflakeIdGen {
 
     private static final Random random = new Random();
 
-    private final long workId;
-
     private long fixStepMills;
 
     private long lastTimestamp;
@@ -62,21 +61,17 @@ public class SnowflakeIdGen {
     // 1年时间的毫秒值
     private static final long DEFAULT_BASE_BACKUP_MILLS = 365 * 24 * 3600 * 1000L;
 
-    public SnowflakeIdGen(long workId) {
-        this(DEFAULT_TIME_EPOCH, workId, DEFAULT_BASE_BACKUP_MILLS);
+    private final Object lock = new Object();
+
+    public SnowflakeIdCreator() {
+        this(DEFAULT_TIME_EPOCH, DEFAULT_BASE_BACKUP_MILLS);
     }
 
     /**
      * @param timeEpoch       基线日期
-     * @param workId          工作节点
      * @param baseBackupMills 时钟回拨缓存时间
      */
-    public SnowflakeIdGen(long timeEpoch, long workId, long baseBackupMills) {
-        logger.info("workId={}", workId);
-        if (workId > MAX_WORK_ID) {
-            throw new IllegalArgumentException("workId more than " + MAX_WORK_ID);
-        }
-        this.workId = workId;
+    public SnowflakeIdCreator(long timeEpoch, long baseBackupMills) {
         // 2000-01-01 00:00 时间的毫秒值
         this.timeEpoch = timeEpoch;
         // 1年时间的毫秒值
@@ -127,7 +122,12 @@ public class SnowflakeIdGen {
      *
      * @return 返回19位的long值
      */
-    public synchronized long getId() {
+    @Override
+    public long createId(long workId) {
+        logger.info("workId={}", workId);
+        if (workId > MAX_WORK_ID) {
+            throw new IllegalArgumentException("workId more than " + MAX_WORK_ID);
+        }
         long timestamp = currentBaseTime();
         if (timestamp < lastTimestamp) {
             long offset = lastTimestamp - timestamp;
@@ -150,7 +150,9 @@ public class SnowflakeIdGen {
         }
         //最后的时间戳与当前时间相等
         if (lastTimestamp == timestamp) {
-            sequence = (sequence + 1) & sequenceMask;
+            synchronized (lock) {
+                sequence = (sequence + 1) & sequenceMask;
+            }
             if (sequence == 0) {
                 sequence = random.nextInt(100);
                 timestamp = tilNextTimestamp(lastTimestamp);
@@ -159,7 +161,10 @@ public class SnowflakeIdGen {
             sequence = random.nextInt(100);
         }
         this.lastTimestamp = timestamp;
-        return (timestamp - timeEpoch) << timestampShift | workId << workIdShift | sequence;
+        long id = (timestamp - timeEpoch) << timestampShift | workId << workIdShift | sequence;
+        if (id <= 0) {
+            throw new IllegalArgumentException("id invalid");
+        }
+        return id;
     }
-
 }
