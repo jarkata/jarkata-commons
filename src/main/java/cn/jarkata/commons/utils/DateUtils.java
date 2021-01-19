@@ -17,11 +17,11 @@ public class DateUtils {
     /**
      * ISO_DATE_TIME
      */
-    private static final DateTimeFormatter BASIC_ISO_DATETIME = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+    private static final DateTimeFormatter ISO_DATETIME = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
     /**
      * yyyyMMdd格式
      */
-    private static final DateTimeFormatter SHORT_ISO_DATE = DateTimeFormatter.ofPattern("yyyyMMdd");
+    private static final DateTimeFormatter BASIC_ISO_DATE = DateTimeFormatter.ofPattern("yyyyMMdd");
 
     /**
      * Date Utils
@@ -133,11 +133,11 @@ public class DateUtils {
      * @param localDate date
      * @return yyyyMMdd date string
      */
-    public static String toShortDate(LocalDate localDate) {
+    public static String toBasicDate(LocalDate localDate) {
         if (Objects.isNull(localDate)) {
             return JarkataConstants.EMPTY_STR;
         }
-        return localDate.format(SHORT_ISO_DATE);
+        return localDate.format(BASIC_ISO_DATE);
     }
 
     /**
@@ -150,6 +150,6 @@ public class DateUtils {
         if (Objects.isNull(dateTime)) {
             return JarkataConstants.EMPTY_STR;
         }
-        return dateTime.format(BASIC_ISO_DATETIME);
+        return dateTime.format(ISO_DATETIME);
     }
 }
