@@ -161,10 +161,6 @@ public class SnowflakeIdCreator implements IdCreator {
             sequence = random.nextInt(100);
         }
         this.lastTimestamp = timestamp;
-        long id = (timestamp - timeEpoch) << timestampShift | workId << workIdShift | sequence;
-        if (id <= 0) {
-            throw new IllegalArgumentException("id invalid");
-        }
-        return id;
+        return (timestamp - timeEpoch) << timestampShift | workId << workIdShift | sequence;
     }
 }

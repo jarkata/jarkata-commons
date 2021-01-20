@@ -42,12 +42,14 @@
             <comments>jarkata commons</comments>
         </license>
     </licenses>
+
     <developers>
         <developer>
-            <name>fxwindy</name>
+            <name>jarkata</name>
             <email>jarkata@foxmail.com</email>
         </developer>
     </developers>
+
     <scm>
         <tag>master</tag>
         <connection>https://github.com/jarkata/jarkata-commons.git</connection>
@@ -104,7 +106,7 @@
                 <version>1.6.8</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <serverId>sonatype</serverId>
+                    <serverId>sonatype_releases</serverId>
                     <nexusUrl>https://oss.sonatype.org</nexusUrl>
                     <autoReleaseAfterClose>true</autoReleaseAfterClose>
                 </configuration>
@@ -118,8 +120,7 @@
         </snapshotRepository>
         <repository>
             <id>sonatype_releases</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/
-            </url>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
 </project>
