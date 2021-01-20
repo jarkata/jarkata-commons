@@ -41,9 +41,9 @@ public class SnowflakeIdCreatorTest {
         String id = IdFactory.createId(1, 27);
         System.out.println(id);
         long start = System.currentTimeMillis();
-        for (int i = 0; i < 10000000; i++) {
-            String id2 = IdFactory.createId(1, 31);
-        }
+
+        String id2 = IdFactory.createId(1, 31);
+
         long dur = System.currentTimeMillis() - start;
 
         System.out.println(dur);

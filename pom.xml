@@ -44,7 +44,7 @@
     </licenses>
     <developers>
         <developer>
-            <name>jarkata</name>
+            <name>fxwindy</name>
             <email>jarkata@foxmail.com</email>
         </developer>
     </developers>
@@ -113,11 +113,11 @@
     </build>
     <distributionManagement>
         <snapshotRepository>
-            <id>sonatype</id>
+            <id>sonatype_snapshots</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </snapshotRepository>
         <repository>
-            <id>sonatype</id>
+            <id>sonatype_releases</id>
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/
             </url>
         </repository>
