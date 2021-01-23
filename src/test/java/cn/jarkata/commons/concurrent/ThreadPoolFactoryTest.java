@@ -9,7 +9,7 @@ public class ThreadPoolFactoryTest {
 
     @Test
     public void getSchedule() {
-        ScheduledThreadPoolExecutor schedule = ThreadPoolFactory.getSchedule("test", 2);
+        ScheduledThreadPoolExecutor schedule = ThreadPoolFactory.newSchedule("test", 2);
         int corePoolSize = schedule.getCorePoolSize();
         System.out.println(corePoolSize);
         int maximumPoolSize = schedule.getMaximumPoolSize();

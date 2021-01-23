@@ -22,8 +22,8 @@ public class ThreadPoolFactory {
      * @param coreSize 核心线程数
      * @return 线程池
      */
-    public static ThreadPoolExecutor getThreadPool(String poolName, int coreSize) {
-        return getThreadPool(poolName, coreSize, coreSize);
+    public static ThreadPoolExecutor newThreadPool(String poolName, int coreSize) {
+        return newThreadPool(poolName, coreSize, coreSize);
     }
 
     /**
@@ -34,7 +34,7 @@ public class ThreadPoolFactory {
      * @param maxCoreSize 最大线程数
      * @return 线程池对象
      */
-    public static ThreadPoolExecutor getThreadPool(String poolName, int coreSize, int maxCoreSize) {
+    public static ThreadPoolExecutor newThreadPool(String poolName, int coreSize, int maxCoreSize) {
         return THREAD_POOL_CACHE.getOrDefault(poolName, init(poolName, coreSize, maxCoreSize,
                 JarkataConstants.DEFAULT_THREAD_TASK_TIMEOUT,
                 JarkataConstants.DEFAULT_THREAD_POOL_QUEUE,
@@ -50,8 +50,8 @@ public class ThreadPoolFactory {
      * @param queueSize   队列数
      * @return 线程池对象
      */
-    public static ThreadPoolExecutor getThreadPool(String poolName, int coreSize, int maxCoreSize, int queueSize) {
-        return getThreadPool(poolName, coreSize, maxCoreSize,
+    public static ThreadPoolExecutor newThreadPool(String poolName, int coreSize, int maxCoreSize, int queueSize) {
+        return newThreadPool(poolName, coreSize, maxCoreSize,
                 JarkataConstants.DEFAULT_THREAD_TASK_TIMEOUT, queueSize,
                 JarkataConstants.DEFAULT_THREAD_CLOSE_TIME_WAIT);
     }
@@ -65,7 +65,7 @@ public class ThreadPoolFactory {
      * @param waitTimeouts the time of close thread pool
      * @return thread pool
      */
-    public static ThreadPoolExecutor getThreadPool(String poolName, int coreSize,
+    public static ThreadPoolExecutor newThreadPool(String poolName, int coreSize,
                                                    int maxCoreSize, int queueSize, int timeout, int waitTimeouts) {
         return THREAD_POOL_CACHE.getOrDefault(poolName,
                 init(poolName, coreSize, maxCoreSize,
@@ -83,7 +83,7 @@ public class ThreadPoolFactory {
      */
     private static ThreadPoolExecutor init(String threadName, int coreSize, int maxSize,
                                            int timeout, int queueSize, long waitTimeout) {
-        BlockingQueue<Runnable> blockingQueue = null;
+        BlockingQueue<Runnable> blockingQueue;
         //如果队列长度小于等于0，则使用同步队列
         if (queueSize <= 0) {
             blockingQueue = new SynchronousQueue<>();
@@ -107,13 +107,13 @@ public class ThreadPoolFactory {
                 logger.error("close thread pool exception", e);
                 threadPoolExecutor.shutdownNow();
             }
-            logger.debug("threadPool={} shutdown finish", threadName);
+            logger.info("threadPool={} shutdown finish", threadName);
         }));
         return threadPoolExecutor;
     }
 
 
-    public static ScheduledThreadPoolExecutor getSchedule(String threadName, int coreSize) {
+    public static ScheduledThreadPoolExecutor newSchedule(String threadName, int coreSize) {
         return (ScheduledThreadPoolExecutor) THREAD_POOL_CACHE.getOrDefault(threadName, initScheduled(threadName, coreSize));
     }
 
@@ -128,6 +128,7 @@ public class ThreadPoolFactory {
         ScheduledThreadPoolExecutor threadPoolExecutor =
                 new ScheduledThreadPoolExecutor(coreSize, new NamedThreadFactory(threadName));
         threadPoolExecutor.setMaximumPoolSize(coreSize);
+        threadPoolExecutor.setKeepAliveTime(1L, TimeUnit.SECONDS);
         threadPoolExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardPolicy());
         //添加进程结束时的钩子函数
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
