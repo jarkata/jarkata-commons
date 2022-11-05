@@ -1,6 +1,6 @@
 # jarkata-commons
 
-java common utils 
+java common utils
 
 > Snowflake ID Generator
 
@@ -8,5 +8,4 @@ java common utils
 
 > NamedThreadLocal
 
-> ThreadPoolFacotry
-
+> ThreadPoolFactory

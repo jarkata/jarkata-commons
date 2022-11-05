@@ -17,8 +17,24 @@ public final class StringUtils {
         return isBlank(str) ? defaultVal : str;
     }
 
+    public static String trimToEmpty(Object obj) {
+        if (obj instanceof String) {
+            return ((String) obj).trim();
+        }
+        String str = Objects.toString(obj, null);
+        return trimToEmpty(str);
+    }
+
     public static String trimToEmpty(String str) {
         return isBlank(str) ? "" : str.trim();
+    }
+
+    public static String trimToNull(Object obj) {
+        if (obj instanceof String) {
+            return ((String) obj).trim();
+        }
+        String str = Objects.toString(obj, null);
+        return trimToNull(str);
     }
 
     public static String trimToNull(String str) {
@@ -38,7 +54,6 @@ public final class StringUtils {
         str = str.replaceAll("\\}\\]\\\"", "}]");
         return str;
     }
-
 
 
 }
