@@ -2,6 +2,9 @@ package cn.jarkata.commons.utils;
 
 import java.util.Objects;
 
+/**
+ * 数字类转换工具
+ */
 public final class NumberUtils {
 
     public static Long toLong(Object obj, Long defaultVal) {
