@@ -4,6 +4,7 @@ import cn.jarkata.commons.utils.DateUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.text.SimpleDateFormat;
 import java.time.*;
 import java.util.Date;
 
@@ -19,6 +20,14 @@ public class DateUtilsTest {
     public void testParse() {
         LocalDate query = DateUtils.parseToDate("2020-01-01");
         Assert.assertEquals(query, LocalDate.of(2020, 1, 1));
+    }
+
+    @Test
+    public void testDate() {
+        Date toDate = DateUtils.toDate(LocalDateTime.of(2022, 1, 1, 0, 0, 0));
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String format = sdf.format(toDate);
+        Assert.assertEquals("2022-01-01", format);
     }
 
     @Test

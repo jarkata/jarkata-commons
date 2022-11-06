@@ -33,7 +33,9 @@ public class DateUtils {
         if (timestamp <= 0) {
             return null;
         }
-        return Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDateTime();
+        return Instant.ofEpochMilli(timestamp)
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
     }
 
     /**
@@ -46,7 +48,9 @@ public class DateUtils {
         if (timestamp <= 0) {
             return null;
         }
-        return Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDate();
+        return Instant.ofEpochMilli(timestamp)
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
     }
 
     /**
@@ -84,7 +88,40 @@ public class DateUtils {
         if (Objects.isNull(date)) {
             return null;
         }
-        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        return date.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
+    }
+
+    /**
+     * 将LocalDateTime转换为Date类型
+     *
+     * @param localDateTime 本地时间
+     * @return Date数据
+     */
+    public static Date toDate(LocalDateTime localDateTime) {
+        if (Objects.isNull(localDateTime)) {
+            return null;
+        }
+        Instant instant = localDateTime.atZone(ZoneId.systemDefault())
+                .toInstant();
+        return Date.from(instant);
+    }
+
+    /**
+     * 将LocalDate 转换为Date 时间部分为00:00:00
+     *
+     * @param localDate 本地时间
+     * @return Date类型的数据
+     */
+    public static Date toDate(LocalDate localDate) {
+        if (Objects.isNull(localDate)) {
+            return null;
+        }
+        LocalDateTime localDateTime = LocalDateTime.of(localDate, LocalTime.of(0, 0, 0));
+        Instant instant = localDateTime.atZone(ZoneId.systemDefault())
+                .toInstant();
+        return Date.from(instant);
     }
 
     /**
@@ -97,7 +134,9 @@ public class DateUtils {
         if (Objects.isNull(date)) {
             return null;
         }
-        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return date.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
     }
 
     /**
@@ -110,7 +149,9 @@ public class DateUtils {
         if (localDateTime == null) {
             return -1;
         }
-        return localDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        return localDateTime.atZone(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli();
     }
 
     /**
