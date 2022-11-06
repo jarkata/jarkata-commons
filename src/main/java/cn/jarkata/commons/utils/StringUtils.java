@@ -2,8 +2,17 @@ package cn.jarkata.commons.utils;
 
 import java.util.Objects;
 
+/**
+ * 字符串工具类
+ */
 public final class StringUtils {
 
+    /**
+     * 判断字符串是否为空
+     *
+     * @param str 字符串
+     * @return true-为空，false-不为空
+     */
     public static boolean isBlank(String str) {
         return Objects.nonNull(str) && str.trim()
                 .length() <= 0;
