@@ -23,6 +23,23 @@ public class DateUtils {
      */
     private static final DateTimeFormatter BASIC_ISO_DATE = DateTimeFormatter.ofPattern("yyyyMMdd");
 
+    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss");
+    private static final DateTimeFormatter TIME_FORMATTER2 = DateTimeFormatter.ofPattern("HH:mm");
+    private static final DateTimeFormatter TIME_FORMATTER3 = DateTimeFormatter.ofPattern("HHmm");
+
+    public static LocalTime parseToTime(String str) {
+        if (StringUtils.isBlank(str)) {
+            return null;
+        }
+        if (str.length() == 4) {
+            return LocalTime.parse(str, TIME_FORMATTER3);
+        }
+        if (str.length() == 5) {
+            return LocalTime.parse(str, TIME_FORMATTER2);
+        }
+        return LocalTime.parse(str, TIME_FORMATTER);
+    }
+
     /**
      * Date Utils
      *
