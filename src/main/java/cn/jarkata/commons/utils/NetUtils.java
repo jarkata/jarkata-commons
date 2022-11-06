@@ -5,6 +5,9 @@ import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * 网络工具类
+ */
 public class NetUtils {
 
 
@@ -41,7 +44,8 @@ public class NetUtils {
                 }
             }
         }
-        return InetAddress.getLocalHost().getHostAddress();
+        return InetAddress.getLocalHost()
+                .getHostAddress();
     }
 
     /**
@@ -72,10 +76,7 @@ public class NetUtils {
      * @since 2.7.6
      */
     private static boolean ignoreNetworkInterface(NetworkInterface networkInterface) throws SocketException {
-        return networkInterface == null
-            || networkInterface.isLoopback()
-            || networkInterface.isVirtual()
-            || !networkInterface.isUp();
+        return networkInterface == null || networkInterface.isLoopback() || networkInterface.isVirtual() || !networkInterface.isUp();
     }
 
 

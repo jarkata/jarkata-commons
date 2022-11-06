@@ -16,10 +16,16 @@ public class NamedThreadFactory implements ThreadFactory {
 
     private static final AtomicLong POOL_SEQ = new AtomicLong(0);
 
+    /**
+     * 创建带有自定义名称的线程
+     *
+     * @param threadName 线程名称
+     */
     public NamedThreadFactory(String threadName) {
         this.threadPrefix = "pool-" + POOL_SEQ.getAndIncrement() + "-" + threadName;
         SecurityManager s = System.getSecurityManager();
-        this.threadGroup = (s == null) ? Thread.currentThread().getThreadGroup() : s.getThreadGroup();
+        this.threadGroup = (s == null) ? Thread.currentThread()
+                .getThreadGroup() : s.getThreadGroup();
     }
 
     @Override
