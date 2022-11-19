@@ -7,13 +7,13 @@ import org.junit.Test;
 import java.io.InputStream;
 import java.util.List;
 
-public class StreamUtilsTest {
+public class FileUtilsTest {
 
     @Test
     public void testGetStream() {
-        InputStream stream = StreamUtils.getStream("test.json");
+        InputStream stream = FileUtils.getStream("test.json");
         Assert.assertNotNull(stream);
-        List<String> lines = StreamUtils.readLines(stream);
+        List<String> lines = FileUtils.readLines(stream);
         System.out.println(lines);
 
     }

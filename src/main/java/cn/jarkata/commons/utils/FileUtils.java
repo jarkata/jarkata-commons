@@ -6,14 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class StreamUtils {
+public class FileUtils {
 
     public static InputStream toInputStream(String str) {
         return new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8));
     }
 
     public static InputStream getStream(String fileName) {
-        InputStream resource = StreamUtils.class.getClassLoader()
+        InputStream resource = FileUtils.class.getClassLoader()
                 .getResourceAsStream(fileName);
         if (Objects.isNull(resource)) {
             resource = Thread.currentThread()
