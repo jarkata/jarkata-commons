@@ -17,4 +17,10 @@ public class FileUtilsTest {
         System.out.println(lines);
 
     }
+
+    @Test
+    public void testTrimPrefix() {
+        String trimPrefix = FileUtils.trimPrefix("C:/d/test.txt", "C:/");
+        Assert.assertEquals("d/test.txt", trimPrefix);
+    }
 }

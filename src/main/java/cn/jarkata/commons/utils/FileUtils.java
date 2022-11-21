@@ -3,9 +3,13 @@ package cn.jarkata.commons.utils;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class FileUtils {
 
@@ -23,7 +27,65 @@ public class FileUtils {
         }
     }
 
-    public List<String> readFile(File file) throws IOException {
+    public static String trimPath(String path) {
+        if (StringUtils.isBlank(path)) {
+            return "";
+        }
+        path = path.replaceAll("\\\\", "/");
+        path = path.replaceAll("\\/\\/", "/");
+        return path;
+    }
+
+    public static String trimSuffix(String filePath, String suffix) {
+        if (StringUtils.isBlank(filePath)) {
+            return "";
+        }
+        filePath = filePath.substring(0, filePath.length() - suffix.length());
+        return filePath;
+    }
+
+    public static String trimPrefix(String filePath, String prefix) {
+        if (StringUtils.isBlank(filePath)) {
+            return "";
+        }
+        filePath = filePath.substring(prefix.length());
+        return filePath;
+    }
+
+    public static void clearFile(File directory) throws IOException {
+        try (Stream<Path> pathStream = Files.walk(directory.toPath())
+                .sorted(Comparator.reverseOrder())) {
+            List<Path> pathList = pathStream.collect(Collectors.toList());
+            pathList.forEach(path -> {
+                File file = path.toFile();
+                if (!deleteFile(file)) {
+                    throw new IllegalArgumentException("File Type Invalid");
+                }
+            });
+        }
+    }
+
+    /**
+     * 删除文件,如果文件为目录且为空时，同样删除
+     *
+     * @param file 文件
+     * @return true-删除成功，false-删除失败
+     */
+    public static boolean deleteFile(File file) {
+        if (Objects.isNull(file)) {
+            return true;
+        }
+        if (file.isFile()) {
+            return file.delete();
+        } else if (file.isDirectory() && Objects.requireNonNull(file.list()).length <= 0) {
+            return file.delete();
+        } else if (file.isHidden()) {
+            return file.delete();
+        }
+        return false;
+    }
+
+    public static List<String> readFile(File file) throws IOException {
         Objects.requireNonNull(file);
         return readLines(Files.newInputStream(file.toPath()));
     }
