@@ -2,6 +2,7 @@ package cn.jarkata.commons.utils;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Objects;
 import java.util.zip.ZipEntry;
@@ -16,6 +17,15 @@ public class ZipUtils {
                 .getAbsolutePath(), true);
     }
 
+    /**
+     * 解压Zip或者Jar文件
+     *
+     * @param file
+     * @param outputPath
+     * @param clearHistoryFile
+     * @return
+     * @throws IOException
+     */
     public static File unzip(File file, String outputPath, boolean clearHistoryFile) throws IOException {
         Objects.requireNonNull(file, "ZipFile Null");
         if (file.isDirectory()) {
@@ -37,8 +47,8 @@ public class ZipUtils {
             while (Objects.nonNull(zipEntry = zis.getNextEntry())) {
                 String entryName = zipEntry.getName();
                 File targetZipFile = new File(outputTargetFile, entryName);
-                FileUtils.ensureDirectory(targetZipFile);
                 boolean entryDirectory = zipEntry.isDirectory();
+                ensureDirectory(targetZipFile, entryDirectory);
                 if (entryDirectory) {
                     continue;
                 }
@@ -47,11 +57,16 @@ public class ZipUtils {
                 }
                 try (InputStream fileInputStream = zipFile.getInputStream(zipEntry)) {
                     ByteArrayOutputStream arrayOutputStream = FileUtils.toByteStream(fileInputStream);
-                    Files.write(targetZipFile.toPath(), arrayOutputStream.toByteArray(), StandardOpenOption.CREATE_NEW);
+                    Path path = targetZipFile.toPath();
+                    Files.write(path, arrayOutputStream.toByteArray(), StandardOpenOption.CREATE_NEW);
                 }
             }
         }
 
         return outputTargetFile;
+    }
+
+    public static void ensureDirectory(File file, boolean entryDirectory) {
+        FileUtils.ensureDirectory(file, !entryDirectory);
     }
 }

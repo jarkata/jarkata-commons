@@ -91,22 +91,22 @@ public class FileUtils {
     }
 
     public static boolean ensureDirectory(File file) {
+        return ensureDirectory(file, file.isFile());
+    }
+
+    public static boolean ensureDirectory(File file, boolean isFile) {
         if (Objects.isNull(file)) {
             return false;
         }
-        if (file.isFile()) {
-            File parentFile = file.getParentFile();
-            if (!parentFile.exists()) {
-                return parentFile.mkdirs();
-            }
+        File directory = file;
+        if (isFile) {
+            directory = file.getParentFile();
         }
-        if (file.isDirectory()) {
-            if (file.exists()) {
-                return true;
-            }
-            return file.mkdirs();
+        if (directory.exists()) {
+            return true;
         }
-        return false;
+        return directory.mkdirs();
+
     }
 
 
