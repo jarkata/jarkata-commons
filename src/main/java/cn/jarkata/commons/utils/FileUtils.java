@@ -109,6 +109,7 @@ public class FileUtils {
         return false;
     }
 
+
     public static InputStream getStream(String fileName) {
         InputStream resource = FileUtils.class.getClassLoader()
                 .getResourceAsStream(fileName);
@@ -138,4 +139,19 @@ public class FileUtils {
         }
         return lineList;
     }
+
+    public static ByteArrayOutputStream toByteStream(InputStream fis) {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        try (BufferedInputStream bis = new BufferedInputStream(fis); BufferedOutputStream bufferedOs = new BufferedOutputStream(bos)) {
+            byte[] buff = new byte[1024];
+            int len;
+            while ((len = bis.read(buff)) != -1) {
+                bufferedOs.write(buff, 0, len);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return bos;
+    }
+
 }
