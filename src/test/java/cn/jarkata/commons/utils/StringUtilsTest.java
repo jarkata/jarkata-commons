@@ -25,4 +25,24 @@ public class StringUtilsTest {
         Object test = jsonObject.get("test2");
         Assert.assertTrue(test instanceof JSONArray);
     }
+
+    @Test
+    public void testLeftPad2() {
+        long start = System.currentTimeMillis();
+        String leftPad = StringUtils.leftPad("23", 5, "A");
+        long dur = System.currentTimeMillis() - start;
+        System.out.println(dur + " ：" + leftPad);
+
+    }
+
+    @Test
+    public void testLeftPad() {
+        long start = System.currentTimeMillis();
+        for (int index = 0; index < 100000000; index++) {
+            String leftPad = StringUtils.leftPad("23", 10, "A0");
+        }
+        long dur = System.currentTimeMillis() - start;
+        System.out.println("耗时：" + dur);
+
+    }
 }

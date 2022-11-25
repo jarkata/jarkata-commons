@@ -6,6 +6,7 @@ import java.util.Objects;
  * 字符串工具类
  */
 public final class StringUtils {
+    public static final String SPACE = " ";
 
     /**
      * 判断字符串是否为空
@@ -32,6 +33,80 @@ public final class StringUtils {
         }
         String str = Objects.toString(obj, null);
         return trimToEmpty(str);
+    }
+
+    /**
+     * 右侧追加数据
+     *
+     * @param str    字符串
+     * @param len    长度
+     * @param padStr 追加的字符
+     * @return 字符串
+     */
+    public static String rightPad(String str, int len, String padStr) {
+        if (isBlank(str)) {
+            return str;
+        }
+        if (isBlank(padStr)) {
+            padStr = SPACE;
+        }
+        final int padLen = padStr.length();
+
+        final int strLen = str.length();
+        int subLen = len - strLen;
+
+        if (subLen <= 0) {
+            return str; // returns original String when possible
+        }
+        if (subLen == padLen) {
+            return str + padStr;
+        } else if (subLen < padLen) {
+            return str + padStr.substring(0, subLen);
+        } else {
+            return str + paddingStr(subLen, padStr);
+        }
+    }
+
+    /**
+     * 左侧追加字符串
+     *
+     * @param str    字符串
+     * @param len    目标字符串长度
+     * @param padStr 追加的字符串
+     * @return 结果字符串
+     */
+    public static String leftPad(String str, int len, String padStr) {
+        if (isBlank(str)) {
+            return str;
+        }
+        if (isBlank(padStr)) {
+            padStr = SPACE;
+        }
+        final int padLen = padStr.length();
+
+        final int strLen = str.length();
+        int subLen = len - strLen;
+
+        if (subLen <= 0) {
+            return str; // returns original String when possible
+        }
+        if (subLen == padLen) {
+            return padStr + str;
+        } else if (subLen < padLen) {
+            return padStr.substring(0, subLen) + str;
+        } else {
+            return paddingStr(subLen, padStr) + str;
+        }
+    }
+
+    public static String paddingStr(int len, String padChar) {
+        StringBuilder builder = new StringBuilder();
+        char[] padChars = padChar.toCharArray();
+        int padLen = padChars.length;
+        for (int index = 0; index < len; index = index + padLen) {
+            builder.append(padChar);
+        }
+        return builder.substring(0, len);
     }
 
     public static String trimToEmpty(String str) {
