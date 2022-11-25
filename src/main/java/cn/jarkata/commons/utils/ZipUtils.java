@@ -11,6 +11,13 @@ import java.util.zip.ZipInputStream;
 
 public class ZipUtils {
 
+    /**
+     * 解压文件
+     *
+     * @param file zip文件
+     * @return 解压之后的文件目录
+     * @throws IOException 文件异常
+     */
     public static File unzip(File file) throws IOException {
         Objects.requireNonNull(file, "ZipFile Null");
         return unzip(file, file.getParentFile()
@@ -20,11 +27,11 @@ public class ZipUtils {
     /**
      * 解压Zip或者Jar文件
      *
-     * @param file
-     * @param outputPath
-     * @param clearHistoryFile
-     * @return
-     * @throws IOException
+     * @param file             zip文件
+     * @param outputPath       解压文件的输出目录
+     * @param clearHistoryFile 是否清理历时文件
+     * @return 解压之后的文件
+     * @throws IOException 文件异常
      */
     public static File unzip(File file, String outputPath, boolean clearHistoryFile) throws IOException {
         Objects.requireNonNull(file, "ZipFile Null");
