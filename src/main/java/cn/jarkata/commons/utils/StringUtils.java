@@ -35,6 +35,13 @@ public final class StringUtils {
         return trimToEmpty(str);
     }
 
+    public static int length(String str) {
+        if (isBlank(str)) {
+            return 0;
+        }
+        return str.length();
+    }
+
     /**
      * 右侧追加数据
      *

@@ -55,8 +55,38 @@ public class DateUtilsTest {
     }
 
     @Test
-    public void testtoLocalDateTimeWithDate() {
+    public void testToLocalDateTimeWithDate() {
         LocalDateTime localDate = DateUtils.toLocalDateTime(new Date());
         System.out.println(localDate);
+    }
+
+    @Test
+    public void testParseToTime() {
+        LocalTime localTime = DateUtils.parseToTime("201111");
+        Assert.assertEquals(localTime, LocalTime.of(20, 11, 11));
+        LocalTime localTime1 = DateUtils.parseToTime("2011");
+        Assert.assertEquals(localTime1, LocalTime.of(20, 11));
+        LocalTime localTime2 = DateUtils.parseToTime("20:11:11");
+        Assert.assertEquals(localTime2, LocalTime.of(20, 11, 11));
+    }
+
+    @Test
+    public void testParseToDate() {
+        LocalDate localDate = DateUtils.parseToDate("20211101");
+        Assert.assertEquals(localDate, LocalDate.of(2021, 11, 1));
+        LocalDate localDate1 = DateUtils.parseToDate("2021-11-01");
+        Assert.assertEquals(localDate1, LocalDate.of(2021, 11, 1));
+    }
+
+    @Test
+    public void testParseToDateTime() {
+        LocalDateTime dateTime = DateUtils.parseToDateTime("2022-12-11 10:10:11");
+        Assert.assertEquals(dateTime, LocalDateTime.of(2022, 12, 11, 10, 10, 11));
+        LocalDateTime dateTime1 = DateUtils.parseToDateTime("2022-12-11T10:10:11");
+        Assert.assertEquals(dateTime1, LocalDateTime.of(2022, 12, 11, 10, 10, 11));
+        LocalDateTime dateTime2 = DateUtils.parseToDateTime("2022-12-11");
+        Assert.assertEquals(dateTime2, LocalDateTime.of(2022, 12, 11, 0, 0, 0));
+        LocalDateTime dateTime3 = DateUtils.parseToDateTime("20221211");
+        Assert.assertEquals(dateTime3, LocalDateTime.of(2022, 12, 11, 0, 0, 0));
     }
 }

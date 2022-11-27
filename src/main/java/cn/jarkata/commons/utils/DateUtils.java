@@ -18,6 +18,7 @@ public class DateUtils {
      * ISO_DATE_TIME
      */
     private static final DateTimeFormatter ISO_DATETIME = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+    private static final DateTimeFormatter ISO_DATETIME1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     /**
      * yyyyMMdd格式
      */
@@ -26,16 +27,20 @@ public class DateUtils {
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss");
     private static final DateTimeFormatter TIME_FORMATTER2 = DateTimeFormatter.ofPattern("HH:mm");
     private static final DateTimeFormatter TIME_FORMATTER3 = DateTimeFormatter.ofPattern("HHmm");
+    private static final DateTimeFormatter TIME_FORMATTER4 = DateTimeFormatter.ofPattern("HHmmss");
 
     public static LocalTime parseToTime(String str) {
         if (StringUtils.isBlank(str)) {
             return null;
         }
-        if (str.length() == 4) {
+        if (StringUtils.length(str) == 4) {
             return LocalTime.parse(str, TIME_FORMATTER3);
         }
-        if (str.length() == 5) {
+        if (StringUtils.length(str) == 5) {
             return LocalTime.parse(str, TIME_FORMATTER2);
+        }
+        if (StringUtils.length(str) == 6) {
+            return LocalTime.parse(str, TIME_FORMATTER4);
         }
         return LocalTime.parse(str, TIME_FORMATTER);
     }
@@ -59,7 +64,7 @@ public class DateUtils {
      * 转换位LocalDate
      *
      * @param timestamp 时间戳
-     * @return 返回localdate对象
+     * @return 返回LocalDate对象
      */
     public static LocalDate toLocalDate(long timestamp) {
         if (timestamp <= 0) {
@@ -77,8 +82,10 @@ public class DateUtils {
      * @return LocalDate对象
      */
     public static LocalDate parseToDate(String localDateStr) {
-        TemporalAccessor temporalAccessor = DateTimeFormatter.ISO_LOCAL_DATE.parse(localDateStr);
-        return temporalAccessor.query(TemporalQueries.localDate());
+        if (StringUtils.length(localDateStr) == 8) {
+            return LocalDate.parse(localDateStr, BASIC_ISO_DATE);
+        }
+        return LocalDate.parse(localDateStr, DateTimeFormatter.ISO_LOCAL_DATE);
     }
 
     /**
@@ -88,6 +95,16 @@ public class DateUtils {
      * @return LocalDateTime对象
      */
     public static LocalDateTime parseToDateTime(String localDateTimeStr) {
+        if (StringUtils.length(localDateTimeStr) == 8 || StringUtils.length(localDateTimeStr) == 10) {
+            LocalDate localDate = parseToDate(localDateTimeStr);
+            return LocalDateTime.of(localDate, LocalTime.of(0, 0, 0));
+        }
+        if (StringUtils.length(localDateTimeStr) == 19) {
+            int index = localDateTimeStr.indexOf("T");
+            if (index < 0) {
+                return LocalDateTime.parse(localDateTimeStr, ISO_DATETIME1);
+            }
+        }
         TemporalAccessor temporalAccessor = DateTimeFormatter.ISO_LOCAL_DATE_TIME.parse(localDateTimeStr);
         LocalDate localDate = temporalAccessor.query(TemporalQueries.localDate());
         LocalTime localTime = temporalAccessor.query(TemporalQueries.localTime());
