@@ -82,6 +82,9 @@ public class DateUtils {
      * @return LocalDate对象
      */
     public static LocalDate parseToDate(String localDateStr) {
+        if (StringUtils.isBlank(localDateStr)) {
+            return null;
+        }
         if (StringUtils.length(localDateStr) == 8) {
             return LocalDate.parse(localDateStr, BASIC_ISO_DATE);
         }
@@ -95,8 +98,14 @@ public class DateUtils {
      * @return LocalDateTime对象
      */
     public static LocalDateTime parseToDateTime(String localDateTimeStr) {
+        if (StringUtils.isBlank(localDateTimeStr)) {
+            return null;
+        }
         if (StringUtils.length(localDateTimeStr) == 8 || StringUtils.length(localDateTimeStr) == 10) {
             LocalDate localDate = parseToDate(localDateTimeStr);
+            if (Objects.isNull(localDate)) {
+                return null;
+            }
             return LocalDateTime.of(localDate, LocalTime.of(0, 0, 0));
         }
         if (StringUtils.length(localDateTimeStr) == 19) {

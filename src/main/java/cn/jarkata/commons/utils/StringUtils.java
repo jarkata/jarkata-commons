@@ -15,7 +15,10 @@ public final class StringUtils {
      * @return true-为空，false-不为空
      */
     public static boolean isBlank(String str) {
-        return Objects.nonNull(str) && str.trim()
+        if (Objects.isNull(str)) {
+            return true;
+        }
+        return str.trim()
                 .length() <= 0;
     }
 
