@@ -45,6 +45,41 @@ public class DateUtils {
         return LocalTime.parse(str, TIME_FORMATTER);
     }
 
+    public static LocalDateTime ofLocalDateTime(LocalDate localDate) {
+        if (Objects.isNull(localDate)) {
+            return null;
+        }
+        return LocalDateTime.of(localDate, LocalTime.of(0, 0));
+    }
+
+    public static LocalDateTime ofLocalDateTime(LocalTime localTime) {
+        if (Objects.isNull(localTime)) {
+            return null;
+        }
+        return LocalDateTime.of(LocalDate.now(), localTime);
+    }
+
+    public static LocalDate ofLocalDate(LocalDateTime dateTime) {
+        if (Objects.isNull(dateTime)) {
+            return null;
+        }
+        return dateTime.toLocalDate();
+    }
+
+    public static LocalTime ofLocalTime(LocalDateTime dateTime) {
+        if (Objects.isNull(dateTime)) {
+            return null;
+        }
+        return dateTime.toLocalTime();
+    }
+
+    public static Instant ofInstant(LocalDateTime dateTime) {
+        if (Objects.isNull(dateTime)) {
+            return null;
+        }
+        return dateTime.atZone(ZoneId.systemDefault()).toInstant();
+    }
+
     /**
      * Date Utils
      *
