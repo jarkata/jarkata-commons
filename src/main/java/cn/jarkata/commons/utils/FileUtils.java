@@ -1,6 +1,8 @@
 package cn.jarkata.commons.utils;
 
 import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -12,20 +14,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class FileUtils {
-
-    public static InputStream toInputStream(String str) {
-        return new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8));
-    }
-
-    public static void write(File file, String message) throws IOException {
-        boolean directory = ensureDirectory(file);
-        if (!directory) {
-            throw new IllegalArgumentException(file + " Not Exist");
-        }
-        try (FileOutputStream fos = new FileOutputStream(file)) {
-            fos.write(message.getBytes(StandardCharsets.UTF_8));
-        }
-    }
 
     public static String trimPath(String path) {
         if (StringUtils.isBlank(path)) {
@@ -109,10 +97,34 @@ public class FileUtils {
 
     }
 
+    public static void write(File file, String message) throws IOException {
+        boolean directory = ensureDirectory(file);
+        if (!directory) {
+            throw new IllegalArgumentException(file + " Not Exist");
+        }
+        try (FileOutputStream fos = new FileOutputStream(file)) {
+            fos.write(message.getBytes(StandardCharsets.UTF_8));
+        }
+    }
+
+    public static void appendData(byte[] data, File targetFile) throws IOException {
+        try (RandomAccessFile accessFile = new RandomAccessFile(targetFile, "rw");
+             FileChannel fileChannel = accessFile.getChannel()) {
+            long size = fileChannel.size();
+            fileChannel.position(size);
+            ByteBuffer buffer = ByteBuffer.wrap(data);
+            fileChannel.write(buffer);
+        }
+    }
+
+
+    public static InputStream toInputStream(String str) {
+        return new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8));
+    }
+
 
     public static InputStream getStream(String fileName) {
-        InputStream resource = FileUtils.class.getClassLoader()
-                .getResourceAsStream(fileName);
+        InputStream resource = FileUtils.class.getClassLoader().getResourceAsStream(fileName);
         if (Objects.isNull(resource)) {
             resource = Thread.currentThread()
                     .getContextClassLoader()
@@ -140,9 +152,11 @@ public class FileUtils {
         return lineList;
     }
 
+
     public static ByteArrayOutputStream toByteStream(InputStream fis) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        try (BufferedInputStream bis = new BufferedInputStream(fis); BufferedOutputStream bufferedOs = new BufferedOutputStream(bos)) {
+        try (BufferedInputStream bis = new BufferedInputStream(fis);
+             BufferedOutputStream bufferedOs = new BufferedOutputStream(bos)) {
             byte[] buff = new byte[1024];
             int len;
             while ((len = bis.read(buff)) != -1) {
