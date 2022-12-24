@@ -108,6 +108,7 @@ public class FileUtils {
     }
 
     public static void appendData(byte[] data, File targetFile) throws IOException {
+        ensureDirectory(targetFile);
         try (RandomAccessFile accessFile = new RandomAccessFile(targetFile, "rw");
              FileChannel fileChannel = accessFile.getChannel()) {
             long size = fileChannel.size();
