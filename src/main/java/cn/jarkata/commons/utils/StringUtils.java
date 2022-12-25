@@ -26,13 +26,33 @@ public final class StringUtils {
         return !isBlank(str);
     }
 
+    public static String defaultString(String str, String defaultVal) {
+        return defaultIfBlank(str, defaultVal);
+    }
+
     public static String defaultIfBlank(String str, String defaultVal) {
         return isBlank(str) ? defaultVal : str;
     }
 
+    /**
+     * 会去掉前后的空格
+     *
+     * @param obj 数据
+     * @return 去掉空格之后的数据
+     */
+    public static String trimBlankToEmpty(Object obj) {
+        return trimToEmpty(obj).trim();
+    }
+
+    /**
+     * 如果为null时，返回空字符串<code>""</code>,如果非null，则返回实际值
+     *
+     * @param obj 数据
+     * @return 处理之后的值
+     */
     public static String trimToEmpty(Object obj) {
         if (obj instanceof String) {
-            return ((String) obj).trim();
+            return ((String) obj);
         }
         String str = Objects.toString(obj, null);
         return trimToEmpty(str);
@@ -120,7 +140,7 @@ public final class StringUtils {
     }
 
     public static String trimToEmpty(String str) {
-        return isBlank(str) ? "" : str.trim();
+        return Objects.isNull(str) ? "" : str;
     }
 
     public static String trimToNull(Object obj) {
