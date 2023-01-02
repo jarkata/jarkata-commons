@@ -82,6 +82,27 @@ public class FileUtils {
         return ensureDirectory(file, file.isFile());
     }
 
+    /**
+     * 将input输入流复制至output数据流
+     *
+     * @param inputStream  输入流
+     * @param outputStream 输出流
+     */
+    public static void copy(InputStream inputStream, OutputStream outputStream) {
+        try (
+                BufferedInputStream bis = new BufferedInputStream(inputStream);
+                BufferedOutputStream fos = new BufferedOutputStream(outputStream)
+        ) {
+            byte[] buffer = new byte[1024];
+            int len;
+            while ((len = bis.read(buffer)) > 0) {
+                fos.write(buffer, 0, len);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static boolean ensureDirectory(File file, boolean isFile) {
         if (Objects.isNull(file)) {
             return false;
