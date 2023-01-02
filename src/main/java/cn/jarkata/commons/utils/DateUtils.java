@@ -128,6 +128,8 @@ public class DateUtils {
 
     /**
      * yyyy-MM-dd'T'HH:mm:ss 格式的日期解析为LocalDateTime对象
+     * yyyy-MM-dd HH:mm:ss 格式的日期解析为LocalDateTime对象
+     * yyyy-MM-dd 格式解析为LocalDateTime对象
      *
      * @param localDateTimeStr yyyy-MM-dd'T'HH:mm:ss
      * @return LocalDateTime对象
@@ -220,7 +222,7 @@ public class DateUtils {
     /**
      * convert date to millis
      *
-     * @param localDateTime localdate
+     * @param localDateTime localDateTime，转换为毫秒数
      * @return the millis of date
      */
     public static long toMillis(LocalDateTime localDateTime) {
