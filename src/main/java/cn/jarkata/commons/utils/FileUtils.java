@@ -1,15 +1,14 @@
 package cn.jarkata.commons.utils;
 
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -39,6 +38,28 @@ public class FileUtils {
         filePath = filePath.substring(prefix.length());
         return filePath;
     }
+
+    /**
+     * 将所有的文件对象转换为List
+     *
+     * @param file 文件集合
+     * @return URL集合
+     */
+    public static List<URL> toURL(File... file) {
+        return Arrays.stream(file).map(mapper -> {
+            try {
+                return mapper.toURI().toURL();
+            } catch (MalformedURLException e) {
+                throw new RuntimeException(e);
+            }
+        }).collect(Collectors.toList());
+    }
+
+
+    public static List<File> toFiles(String... locations) {
+        return Arrays.stream(locations).map(File::new).collect(Collectors.toList());
+    }
+
 
     public static void clearFile(File directory) throws IOException {
         try (Stream<Path> pathStream = Files.walk(directory.toPath())
