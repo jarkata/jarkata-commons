@@ -181,12 +181,11 @@ public class FileUtils {
     }
 
     public static List<String> readLines(InputStream inputStream) {
-        BufferedInputStream bis = new BufferedInputStream(inputStream);
-        InputStreamReader isr = new InputStreamReader(bis);
-        BufferedReader br = new BufferedReader(isr);
         List<String> lineList = new ArrayList<>();
         String line;
-        try {
+        try (BufferedInputStream bis = new BufferedInputStream(inputStream);
+             InputStreamReader isr = new InputStreamReader(bis);
+             BufferedReader br = new BufferedReader(isr);) {
             while (Objects.nonNull(line = br.readLine())) {
                 lineList.add(line);
             }
