@@ -273,4 +273,26 @@ public class DateUtils {
         }
         return dateTime.format(ISO_DATETIME);
     }
+
+    /**
+     * @param dateTime 日期
+     * @return yyyy-MM-dd格式的日期
+     */
+    public static String formatIsoDate(LocalDateTime dateTime) {
+        if (Objects.isNull(dateTime)) {
+            return JarkataConstants.EMPTY_STR;
+        }
+        return dateTime.format(DateTimeFormatter.ISO_DATE);
+    }
+
+    /**
+     * @param dateTime 日期
+     * @return yyyyMMdd 格式的日期
+     */
+    public static String formatBasicDate(LocalDateTime dateTime) {
+        if (Objects.isNull(dateTime)) {
+            return JarkataConstants.EMPTY_STR;
+        }
+        return dateTime.format(DateTimeFormatter.BASIC_ISO_DATE);
+    }
 }
