@@ -35,6 +35,13 @@ public class ReflectionUtilsTest {
         Assert.assertEquals(2, allField.length);
     }
 
+    @Test
+    public void getFieldValue_Str() {
+        Card card = new Card();
+        Object fieldValue = ReflectionUtils.getFieldValue(card, "str");
+        Objects.requireNonNull(fieldValue);
+        Assert.assertEquals(fieldValue, "123");
+    }
 
     @Test
     public void getDeclaredField() throws NoSuchFieldException {
