@@ -19,6 +19,7 @@ public class DateUtils {
      */
     private static final DateTimeFormatter ISO_DATETIME = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
     private static final DateTimeFormatter ISO_DATETIME1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter ISO_DATETIME2 = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
     /**
      * yyyyMMdd格式
      */
@@ -29,6 +30,16 @@ public class DateUtils {
     private static final DateTimeFormatter TIME_FORMATTER3 = DateTimeFormatter.ofPattern("HHmm");
     private static final DateTimeFormatter TIME_FORMATTER4 = DateTimeFormatter.ofPattern("HHmmss");
 
+    /**
+     * 解析如下格式的字符串为时间部分
+     * 1)'HHmm'
+     * 2)'HH:mm'
+     * 3)'HHmmss'
+     * 4)'HH:mm:ss'
+     *
+     * @param str 时间字符串
+     * @return 时间对象
+     */
     public static LocalTime parseToTime(String str) {
         if (StringUtils.isBlank(str)) {
             return null;
@@ -44,6 +55,7 @@ public class DateUtils {
         }
         return LocalTime.parse(str, TIME_FORMATTER);
     }
+
 
     public static LocalDateTime ofLocalDateTime(LocalDate localDate) {
         if (Objects.isNull(localDate)) {
@@ -90,9 +102,7 @@ public class DateUtils {
         if (timestamp <= 0) {
             return null;
         }
-        return Instant.ofEpochMilli(timestamp)
-                .atZone(ZoneId.systemDefault())
-                .toLocalDateTime();
+        return Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
 
     /**
@@ -105,13 +115,13 @@ public class DateUtils {
         if (timestamp <= 0) {
             return null;
         }
-        return Instant.ofEpochMilli(timestamp)
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();
+        return Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
     /**
-     * yyyy-MM-dd格式的日期解析为LocalDate
+     * 解析如下格式的日期解析为LocalDate
+     * 1)'yyyy-MM-dd'
+     * 2)'yyyyMMdd'
      *
      * @param localDateStr yyyy-MM-dd格式的日期
      * @return LocalDate对象
@@ -127,11 +137,14 @@ public class DateUtils {
     }
 
     /**
-     * yyyy-MM-dd'T'HH:mm:ss 格式的日期解析为LocalDateTime对象
-     * yyyy-MM-dd HH:mm:ss 格式的日期解析为LocalDateTime对象
-     * yyyy-MM-dd 格式解析为LocalDateTime对象
+     * 解析如下格式的日期字符串为LocalDateTime对象
+     * yyyyMMdd  时间部分为'00:00:00'
+     * yyyy-MM-dd 时间部分为'00:00:00'
+     * yyyy-MM-dd'T'HH:mm:ss
+     * yyyy-MM-dd HH:mm:ss
+     * yyyyMMddHHmmss
      *
-     * @param localDateTimeStr yyyy-MM-dd'T'HH:mm:ss
+     * @param localDateTimeStr 见描述
      * @return LocalDateTime对象
      */
     public static LocalDateTime parseToDateTime(String localDateTimeStr) {
@@ -144,6 +157,9 @@ public class DateUtils {
                 return null;
             }
             return LocalDateTime.of(localDate, LocalTime.of(0, 0, 0));
+        }
+        if (StringUtils.length(localDateTimeStr) == 14) {
+            return LocalDateTime.parse(localDateTimeStr, ISO_DATETIME2);
         }
         if (StringUtils.length(localDateTimeStr) == 19) {
             int index = localDateTimeStr.indexOf("T");
@@ -168,9 +184,7 @@ public class DateUtils {
         if (Objects.isNull(date)) {
             return null;
         }
-        return date.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDateTime();
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
 
     /**
@@ -183,8 +197,7 @@ public class DateUtils {
         if (Objects.isNull(localDateTime)) {
             return null;
         }
-        Instant instant = localDateTime.atZone(ZoneId.systemDefault())
-                .toInstant();
+        Instant instant = localDateTime.atZone(ZoneId.systemDefault()).toInstant();
         return Date.from(instant);
     }
 
@@ -199,8 +212,7 @@ public class DateUtils {
             return null;
         }
         LocalDateTime localDateTime = LocalDateTime.of(localDate, LocalTime.of(0, 0, 0));
-        Instant instant = localDateTime.atZone(ZoneId.systemDefault())
-                .toInstant();
+        Instant instant = localDateTime.atZone(ZoneId.systemDefault()).toInstant();
         return Date.from(instant);
     }
 
@@ -214,9 +226,7 @@ public class DateUtils {
         if (Objects.isNull(date)) {
             return null;
         }
-        return date.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
     /**
@@ -229,9 +239,7 @@ public class DateUtils {
         if (localDateTime == null) {
             return -1;
         }
-        return localDateTime.atZone(ZoneId.systemDefault())
-                .toInstant()
-                .toEpochMilli();
+        return localDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
     }
 
     /**
@@ -254,6 +262,7 @@ public class DateUtils {
      * @param localDate date
      * @return yyyyMMdd date string
      */
+    @Deprecated
     public static String toBasicDate(LocalDate localDate) {
         if (Objects.isNull(localDate)) {
             return JarkataConstants.EMPTY_STR;
@@ -267,11 +276,38 @@ public class DateUtils {
      * @param dateTime datetime variable
      * @return yyyy-MM-ddTHH:mm:ss
      */
+    @Deprecated
     public static String toIsoDate(LocalDateTime dateTime) {
         if (Objects.isNull(dateTime)) {
             return JarkataConstants.EMPTY_STR;
         }
         return dateTime.format(ISO_DATETIME);
+    }
+
+    /**
+     * 转换为ISO标准日期字符串
+     *
+     * @param dateTime datetime variable
+     * @return yyyy-MM-ddTHH:mm:ss
+     */
+    public static String formatStdIsoDateTime(LocalDateTime dateTime) {
+        if (Objects.isNull(dateTime)) {
+            return JarkataConstants.EMPTY_STR;
+        }
+        return dateTime.format(ISO_DATETIME);
+    }
+
+    /**
+     * 转换为'yyyyMMddHHmmss'格式的日期字符串
+     *
+     * @param dateTime datetime variable
+     * @return yyyyMMddHHmmss
+     */
+    public static String formatIsoDateTime(LocalDateTime dateTime) {
+        if (Objects.isNull(dateTime)) {
+            return JarkataConstants.EMPTY_STR;
+        }
+        return dateTime.format(ISO_DATETIME2);
     }
 
     /**
