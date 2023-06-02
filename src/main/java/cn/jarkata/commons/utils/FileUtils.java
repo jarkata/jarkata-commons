@@ -14,9 +14,11 @@ import java.util.stream.Stream;
 
 public class FileUtils {
 
+    public static final String EMPTY_STR = "";
+
     public static String trimPath(String path) {
         if (StringUtils.isBlank(path)) {
-            return "";
+            return EMPTY_STR;
         }
         path = path.replaceAll("\\\\", "/");
         path = path.replaceAll("\\/\\/", "/");
@@ -25,7 +27,7 @@ public class FileUtils {
 
     public static String trimSuffix(String filePath, String suffix) {
         if (StringUtils.isBlank(filePath)) {
-            return "";
+            return EMPTY_STR;
         }
         filePath = filePath.substring(0, filePath.length() - suffix.length());
         return filePath;
@@ -33,7 +35,7 @@ public class FileUtils {
 
     public static String trimPrefix(String filePath, String prefix) {
         if (StringUtils.isBlank(filePath)) {
-            return "";
+            return EMPTY_STR;
         }
         filePath = filePath.substring(prefix.length());
         return filePath;
@@ -61,9 +63,14 @@ public class FileUtils {
     }
 
 
+    /**
+     * 清理该目录下的文件
+     *
+     * @param directory 目录文件
+     * @throws IOException 执行失败时，抛出次异常
+     */
     public static void clearFile(File directory) throws IOException {
-        try (Stream<Path> pathStream = Files.walk(directory.toPath())
-                .sorted(Comparator.reverseOrder())) {
+        try (Stream<Path> pathStream = Files.walk(directory.toPath()).sorted(Comparator.reverseOrder())) {
             List<Path> pathList = pathStream.collect(Collectors.toList());
             pathList.forEach(path -> {
                 File file = path.toFile();
@@ -86,7 +93,7 @@ public class FileUtils {
         }
         if (file.isFile()) {
             return file.delete();
-        } else if (file.isDirectory() && Objects.requireNonNull(file.list()).length <= 0) {
+        } else if (file.isDirectory() && Objects.requireNonNull(file.list()).length == 0) {
             return file.delete();
         } else if (file.isHidden()) {
             return file.delete();
@@ -110,10 +117,8 @@ public class FileUtils {
      * @param outputStream 输出流
      */
     public static void copy(InputStream inputStream, OutputStream outputStream) {
-        try (
-                BufferedInputStream bis = new BufferedInputStream(inputStream);
-                BufferedOutputStream fos = new BufferedOutputStream(outputStream)
-        ) {
+        try (BufferedInputStream bis = new BufferedInputStream(inputStream);
+             BufferedOutputStream fos = new BufferedOutputStream(outputStream)) {
             byte[] buffer = new byte[1024];
             int len;
             while ((len = bis.read(buffer)) > 0) {
@@ -149,14 +154,14 @@ public class FileUtils {
         }
     }
 
-    public static void appendData(byte[] data, File targetFile) throws IOException {
+    public static int appendData(byte[] data, File targetFile) throws IOException {
         ensureDirectory(targetFile);
         try (RandomAccessFile accessFile = new RandomAccessFile(targetFile, "rw");
              FileChannel fileChannel = accessFile.getChannel()) {
             long size = fileChannel.size();
             fileChannel.position(size);
             ByteBuffer buffer = ByteBuffer.wrap(data);
-            fileChannel.write(buffer);
+            return fileChannel.write(buffer);
         }
     }
 
@@ -169,13 +174,10 @@ public class FileUtils {
     public static InputStream getStream(String fileName) {
         InputStream resource = FileUtils.class.getClassLoader().getResourceAsStream(fileName);
         if (Objects.isNull(resource)) {
-            resource = Thread.currentThread()
-                    .getContextClassLoader()
-                    .getResourceAsStream(fileName);
+            resource = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName);
         }
         if (Objects.isNull(resource)) {
-            resource = ClassLoader.getSystemClassLoader()
-                    .getResourceAsStream(fileName);
+            resource = ClassLoader.getSystemClassLoader().getResourceAsStream(fileName);
         }
         return resource;
     }
@@ -184,12 +186,12 @@ public class FileUtils {
         List<String> lineList = new ArrayList<>();
         String line;
         try (BufferedInputStream bis = new BufferedInputStream(inputStream);
-             InputStreamReader isr = new InputStreamReader(bis);
-             BufferedReader br = new BufferedReader(isr);) {
+             InputStreamReader isr = new InputStreamReader(bis); BufferedReader br = new BufferedReader(isr);) {
             while (Objects.nonNull(line = br.readLine())) {
                 lineList.add(line);
             }
-        } catch (Exception ignored) {
+        } catch (Exception exception) {
+            throw new IllegalArgumentException(exception);
         }
         return lineList;
     }
