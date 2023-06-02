@@ -8,6 +8,7 @@ import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -145,12 +146,15 @@ public class FileUtils {
     }
 
     public static void write(File file, String message) throws IOException {
-        boolean directory = ensureDirectory(file);
+        if (Objects.isNull(file)) {
+            return;
+        }
+        boolean directory = ensureDirectory(file.getParentFile());
         if (!directory) {
             throw new IllegalArgumentException(file + " Not Exist");
         }
-        try (FileOutputStream fos = new FileOutputStream(file)) {
-            fos.write(message.getBytes(StandardCharsets.UTF_8));
+        try (OutputStream outputStream = Files.newOutputStream(file.toPath(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
+            outputStream.write(message.getBytes(StandardCharsets.UTF_8));
         }
     }
 
