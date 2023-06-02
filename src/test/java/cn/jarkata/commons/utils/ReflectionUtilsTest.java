@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
+import java.util.Map;
 import java.util.Objects;
 
 public class ReflectionUtilsTest {
@@ -41,6 +42,15 @@ public class ReflectionUtilsTest {
         Object fieldValue = ReflectionUtils.getFieldValue(card, "str");
         Objects.requireNonNull(fieldValue);
         Assert.assertEquals(fieldValue, "123");
+    }
+
+    @Test
+    public void testObjectMap() {
+        Card card = new Card();
+        card.setTitle("test");
+        Map<String, Object> objectMap = ReflectionUtils.toObjectMap(card);
+        Object title = objectMap.get("title");
+        Assert.assertEquals(title, "test");
     }
 
     @Test

@@ -1,7 +1,9 @@
 package cn.jarkata.commons.utils;
 
 import java.lang.reflect.Field;
-import java.util.Objects;
+import java.lang.reflect.Modifier;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 反射工具类
@@ -73,6 +75,25 @@ public class ReflectionUtils {
         } catch (Exception ex) {
             throw new IllegalArgumentException(ex);
         }
+    }
+
+    /**
+     * 将对象数据转换为Map结构
+     *
+     * @param obj 对象
+     * @return key/value形式的数据
+     */
+    public static Map<String, Object> toObjectMap(Object obj) {
+        Field[] allField = getAllField(obj);
+        List<Field> fieldList = Arrays.stream(allField)
+                                      .filter(field -> field.getModifiers() != Modifier.STATIC && field.getModifiers() != Modifier.FINAL)
+                                      .collect(Collectors.toList());
+        Map<String, Object> dataMap = new HashMap<>(allField.length);
+        for (Field field : fieldList) {
+            Object fieldValue = getFieldValue(field, obj);
+            dataMap.put(field.getName(), fieldValue);
+        }
+        return dataMap;
     }
 
 }
