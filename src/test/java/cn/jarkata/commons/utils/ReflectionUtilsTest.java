@@ -48,6 +48,6 @@ public class ReflectionUtilsTest {
         Card card = new Card();
         card.setTitle("test");
         Object title = ReflectionUtils.getFieldValue(card, "title");
-        Assert.assertEquals(title, "test");
+        Assert.assertEquals(title, card.getTitle());
     }
 }
