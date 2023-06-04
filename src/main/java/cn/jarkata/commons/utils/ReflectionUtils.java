@@ -3,12 +3,14 @@ package cn.jarkata.commons.utils;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
  * 反射工具类
  */
 public class ReflectionUtils {
+    private static final ConcurrentHashMap<String, List<Field>> fieldCacheMap = new ConcurrentHashMap<>();
 
     /**
      * 获取clazz类的所有字段
@@ -23,6 +25,24 @@ public class ReflectionUtils {
         return clazz.getDeclaredFields();
     }
 
+    public static List<Field> getFieldList(Class<?> objClazz) {
+        if (Objects.isNull(objClazz)) {
+            return new ArrayList<>(0);
+        }
+        List<Field> fieldList = fieldCacheMap.get(objClazz.getName());
+        if (Objects.isNull(fieldList)) {
+            Field[] allField = getAllField(objClazz);
+            fieldList = new ArrayList<>(Arrays.asList(allField));
+            fieldCacheMap.put(objClazz.getName(), fieldList);
+        }
+        Class<?> superclass = objClazz.getSuperclass();
+        if (Objects.nonNull(superclass) && !(superclass.isAssignableFrom(Object.class))) {
+            List<Field> fieldList1 = getFieldList(superclass);
+            fieldList.addAll(fieldList1);
+        }
+        return fieldList;
+    }
+
     public static Field[] getAllField(Object obj) {
         if (Objects.isNull(obj)) {
             return new Field[0];
@@ -30,18 +50,32 @@ public class ReflectionUtils {
         return getAllField(obj.getClass());
     }
 
-    public static Field getDeclaredField(Object obj, String fieldName) throws NoSuchFieldException {
+    public static void setFieldValue(Field distDeclaredField, Object distObj, Object fieldValue) throws IllegalAccessException {
+        if (Objects.isNull(distDeclaredField) || Objects.isNull(fieldValue)) {
+            return;
+        }
+        distDeclaredField.setAccessible(true);
+        distDeclaredField.set(distObj, fieldValue);
+    }
+
+    public static Field getDeclaredField(Object obj, String fieldName) {
         if (Objects.isNull(obj)) {
             return null;
         }
         return getDeclaredField(obj.getClass(), fieldName);
     }
 
-    public static Field getDeclaredField(Class<?> objClazz, String fieldName) throws NoSuchFieldException {
+    public static Field getDeclaredField(Class<?> objClazz, String fieldName) {
         if (Objects.isNull(objClazz)) {
             return null;
         }
-        return objClazz.getDeclaredField(fieldName);
+        Field declaredField;
+        try {
+            declaredField = objClazz.getDeclaredField(fieldName);
+        } catch (Exception ex) {
+            declaredField = getDeclaredField(objClazz.getSuperclass(), fieldName);
+        }
+        return declaredField;
     }
 
     /**
