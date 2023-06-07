@@ -166,6 +166,7 @@ public class DateUtils {
             if (index < 0) {
                 return LocalDateTime.parse(localDateTimeStr, ISO_DATETIME1);
             }
+            return LocalDateTime.parse(localDateTimeStr, ISO_DATETIME);
         }
         TemporalAccessor temporalAccessor = DateTimeFormatter.ISO_LOCAL_DATE_TIME.parse(localDateTimeStr);
         LocalDate localDate = temporalAccessor.query(TemporalQueries.localDate());
