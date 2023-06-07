@@ -163,10 +163,10 @@ public class DateUtils {
         }
         if (StringUtils.length(localDateTimeStr) == 19) {
             int index = localDateTimeStr.indexOf("T");
-            if (index < 0) {
-                return LocalDateTime.parse(localDateTimeStr, ISO_DATETIME1);
+            if (index > 0) {
+                return LocalDateTime.parse(localDateTimeStr, ISO_DATETIME);
             }
-            return LocalDateTime.parse(localDateTimeStr, ISO_DATETIME);
+            return LocalDateTime.parse(localDateTimeStr, ISO_DATETIME1);
         }
         TemporalAccessor temporalAccessor = DateTimeFormatter.ISO_LOCAL_DATE_TIME.parse(localDateTimeStr);
         LocalDate localDate = temporalAccessor.query(TemporalQueries.localDate());

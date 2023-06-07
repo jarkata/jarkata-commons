@@ -10,7 +10,8 @@ import java.util.stream.Collectors;
  * 反射工具类
  */
 public class ReflectionUtils {
-    private static final ConcurrentHashMap<String, List<Field>> fieldCacheMap = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, List<Field>> ALL_FIELD_CACHE_MAP = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, Field> FIELD_CACHE_MAP = new ConcurrentHashMap<>();
 
     /**
      * 获取clazz类的所有字段
@@ -29,17 +30,17 @@ public class ReflectionUtils {
         if (Objects.isNull(objClazz)) {
             return new ArrayList<>(0);
         }
-        List<Field> fieldList = fieldCacheMap.get(objClazz.getName());
+        List<Field> fieldList = ALL_FIELD_CACHE_MAP.get(objClazz.getName());
         if (Objects.isNull(fieldList)) {
             Field[] allField = getAllField(objClazz);
             fieldList = new ArrayList<>(Arrays.asList(allField));
-            fieldCacheMap.put(objClazz.getName(), fieldList);
         }
         Class<?> superclass = objClazz.getSuperclass();
         if (Objects.nonNull(superclass) && !(superclass.isAssignableFrom(Object.class))) {
             List<Field> fieldList1 = getFieldList(superclass);
             fieldList.addAll(fieldList1);
         }
+        ALL_FIELD_CACHE_MAP.put(objClazz.getName(), fieldList);
         return fieldList;
     }
 
@@ -69,11 +70,18 @@ public class ReflectionUtils {
         if (Objects.isNull(objClazz)) {
             return null;
         }
+        Field field = FIELD_CACHE_MAP.get(objClazz.getName() + fieldName);
+        if (Objects.nonNull(field)) {
+            return field;
+        }
         Field declaredField;
         try {
             declaredField = objClazz.getDeclaredField(fieldName);
         } catch (Exception ex) {
             declaredField = getDeclaredField(objClazz.getSuperclass(), fieldName);
+        }
+        if (Objects.nonNull(declaredField)) {
+            FIELD_CACHE_MAP.put(objClazz.getName() + fieldName, declaredField);
         }
         return declaredField;
     }

@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -25,8 +26,16 @@ public class ReflectionUtilsTest {
 
     @Test
     public void getAllField() {
-        Field[] allField = ReflectionUtils.getAllField(Card.class);
-        Assert.assertEquals(2, allField.length);
+        long start = System.currentTimeMillis();
+        try {
+            for (int index = 0; index < 10000000; index++) {
+                Field[] allField = ReflectionUtils.getAllField(Card.class);
+                Assert.assertEquals(2, allField.length);
+            }
+        } finally {
+            long dur = System.currentTimeMillis() - start;
+            System.out.println(dur);
+        }
     }
 
     @Test
@@ -37,11 +46,26 @@ public class ReflectionUtilsTest {
     }
 
     @Test
+    public void getAllField_Class() {
+        List<Field> fieldList = ReflectionUtils.getFieldList(Card.class);
+        Assert.assertEquals(2, fieldList.size());
+    }
+
+    @Test
     public void getFieldValue_Str() {
-        Card card = new Card();
-        Object fieldValue = ReflectionUtils.getFieldValue(card, "str");
-        Objects.requireNonNull(fieldValue);
-        Assert.assertEquals(fieldValue, "123");
+        long start = System.currentTimeMillis();
+        try {
+            for (int index = 0; index < 10000000; index++) {
+                Card card = new Card();
+                Object fieldValue = ReflectionUtils.getFieldValue(card, "str");
+                Objects.requireNonNull(fieldValue);
+                Assert.assertEquals(fieldValue, "123");
+            }
+        } finally {
+            long dur = System.currentTimeMillis() - start;
+            System.out.println(dur);
+        }
+
     }
 
     @Test
