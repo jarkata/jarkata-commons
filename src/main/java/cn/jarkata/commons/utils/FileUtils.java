@@ -171,11 +171,13 @@ public class FileUtils {
 
 
     public static InputStream toInputStream(String str) {
+        str = StringUtils.trimToEmpty(str);
         return new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8));
     }
 
 
     public static InputStream getStream(String fileName) {
+        fileName = StringUtils.trimToEmpty(fileName);
         InputStream resource = FileUtils.class.getClassLoader().getResourceAsStream(fileName);
         if (Objects.isNull(resource)) {
             resource = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName);

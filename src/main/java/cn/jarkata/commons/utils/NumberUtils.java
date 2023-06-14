@@ -12,6 +12,7 @@ public final class NumberUtils {
             return (Long) obj;
         }
         String str = Objects.toString(obj, null);
+        str = StringUtils.trimToEmpty(str);
         if (Objects.isNull(str)) {
             return defaultVal;
         }
@@ -27,6 +28,7 @@ public final class NumberUtils {
             return (Integer) obj;
         }
         String str = Objects.toString(obj, null);
+        str = StringUtils.trimToEmpty(str);
         if (Objects.isNull(str)) {
             return defaultVal;
         }
@@ -42,6 +44,7 @@ public final class NumberUtils {
             return (Float) obj;
         }
         String str = Objects.toString(obj, null);
+        str = StringUtils.trimToEmpty(str);
         if (Objects.isNull(str)) {
             return defaultVal;
         }
@@ -57,6 +60,7 @@ public final class NumberUtils {
             return (Double) obj;
         }
         String str = Objects.toString(obj, null);
+        str = StringUtils.trimToEmpty(str);
         if (Objects.isNull(str)) {
             return defaultVal;
         }

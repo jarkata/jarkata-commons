@@ -41,6 +41,7 @@ public class DateUtils {
      * @return 时间对象
      */
     public static LocalTime parseToTime(String str) {
+        str = StringUtils.trimToEmpty(str);
         if (StringUtils.isBlank(str)) {
             return null;
         }
@@ -127,6 +128,7 @@ public class DateUtils {
      * @return LocalDate对象
      */
     public static LocalDate parseToDate(String localDateStr) {
+        localDateStr = StringUtils.trimToEmpty(localDateStr);
         if (StringUtils.isBlank(localDateStr)) {
             return null;
         }
@@ -148,6 +150,7 @@ public class DateUtils {
      * @return LocalDateTime对象
      */
     public static LocalDateTime parseToDateTime(String localDateTimeStr) {
+        localDateTimeStr = StringUtils.trimToEmpty(localDateTimeStr);
         if (StringUtils.isBlank(localDateTimeStr)) {
             return null;
         }

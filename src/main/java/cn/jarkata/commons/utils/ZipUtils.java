@@ -20,8 +20,7 @@ public class ZipUtils {
      */
     public static File unzip(File file) throws IOException {
         Objects.requireNonNull(file, "ZipFile Null");
-        return unzip(file, file.getParentFile()
-                .getAbsolutePath(), true);
+        return unzip(file, file.getParentFile().getAbsolutePath(), true);
     }
 
     /**
@@ -42,6 +41,7 @@ public class ZipUtils {
         if (!fileName.endsWith(".zip") && !fileName.endsWith(".jar")) {
             return file;
         }
+        outputPath = StringUtils.trimToEmpty(outputPath);
         int indexOf = fileName.lastIndexOf(".");
         if (indexOf <= 0) {
             return file;
@@ -49,7 +49,8 @@ public class ZipUtils {
         String suffix = fileName.substring(indexOf);
         String fileNameTmp = FileUtils.trimSuffix(fileName, suffix);
         File outputTargetFile = new File(outputPath, fileNameTmp);
-        try (ZipFile zipFile = new ZipFile(file); ZipInputStream zis = new ZipInputStream(Files.newInputStream(file.toPath()))) {
+        try (ZipFile zipFile = new ZipFile(file);
+             ZipInputStream zis = new ZipInputStream(Files.newInputStream(file.toPath()))) {
             ZipEntry zipEntry;
             while (Objects.nonNull(zipEntry = zis.getNextEntry())) {
                 String entryName = zipEntry.getName();
