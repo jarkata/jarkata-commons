@@ -4,11 +4,35 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 public class ReflectionUtilsTest {
+
+    @Test
+    public void testInvokeMethod() {
+        Card card = new Card();
+        Object setTitle = ReflectionUtils.invokeMethod(card, "setTitle", new Object[]{"test title"});
+        System.out.println(setTitle);
+        System.out.println(card.getTitle());
+    }
+
+    @Test
+    public void testGetDeclaredMethod() {
+        Card card = new Card();
+        List<Method> declaredMethod = ReflectionUtils.getDeclaredMethod(card, "setTitle");
+        System.out.println(declaredMethod);
+    }
+
+    @Test
+    public void testSetFieldValue() {
+        Card card = new Card();
+        Field declaredField = ReflectionUtils.getDeclaredField(card, "title");
+        ReflectionUtils.setFieldValue(declaredField, card, "fsadfasd");
+        System.out.println(card.getTitle());
+    }
 
     static class Card {
         private static final String str = "123";

@@ -1,6 +1,7 @@
 package cn.jarkata.commons.utils;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -44,6 +45,71 @@ public class ReflectionUtils {
         return fieldList;
     }
 
+
+    public static Method getDeclaredMethod(Object obj, String methodName, Class<?>... parameterType) {
+        if (Objects.isNull(obj)) {
+            return null;
+        }
+        try {
+            return obj.getClass().getDeclaredMethod(methodName, parameterType);
+        } catch (NoSuchMethodException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    /**
+     * 调用指定的方法
+     *
+     * @param obj        对象
+     * @param method     方法名
+     * @param parameters 参数集合
+     * @return 方法执行结果
+     */
+    public static Object invokeMethod(Object obj, String method, Object[] parameters) {
+        if (Objects.isNull(obj) || Objects.isNull(parameters)) {
+            return null;
+        }
+        Method declaredMethod = getDeclaredMethod(obj, method, Arrays.stream(parameters).map(Object::getClass).toArray(Class[]::new));
+        if (Objects.isNull(declaredMethod)) {
+            return null;
+        }
+        try {
+            return declaredMethod.invoke(obj, parameters);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 根据方法名查找对应的方法
+     *
+     * @param obj        对象
+     * @param methodName 方法名
+     * @return 方法集合
+     */
+    public static List<Method> getDeclaredMethod(Object obj, String methodName) {
+        if (Objects.isNull(obj)) {
+            return new ArrayList<>(0);
+        }
+        return getDeclaredMethod(obj.getClass(), methodName);
+    }
+
+    /**
+     * 根据Class对象查找对应的方法
+     *
+     * @param clazz      clazz对象
+     * @param methodName 方法名
+     * @return 方法集合
+     */
+    public static List<Method> getDeclaredMethod(Class<?> clazz, String methodName) {
+        if (Objects.isNull(clazz)) {
+            return new ArrayList<>(0);
+        }
+        List<Method> methodList = Arrays.asList(clazz.getDeclaredMethods());
+        return methodList.stream().filter(method -> method.getName().equals(methodName)).collect(Collectors.toList());
+    }
+
+
     public static Field[] getAllField(Object obj) {
         if (Objects.isNull(obj)) {
             return new Field[0];
@@ -51,12 +117,16 @@ public class ReflectionUtils {
         return getAllField(obj.getClass());
     }
 
-    public static void setFieldValue(Field distDeclaredField, Object distObj, Object fieldValue) throws IllegalAccessException {
+    public static void setFieldValue(Field distDeclaredField, Object distObj, Object fieldValue) {
         if (Objects.isNull(distDeclaredField) || Objects.isNull(fieldValue)) {
             return;
         }
-        distDeclaredField.setAccessible(true);
-        distDeclaredField.set(distObj, fieldValue);
+        try {
+            distDeclaredField.setAccessible(true);
+            distDeclaredField.set(distObj, fieldValue);
+        } catch (Exception ex) {
+            throw new IllegalArgumentException(ex);
+        }
     }
 
     public static Field getDeclaredField(Object obj, String fieldName) {
@@ -127,9 +197,7 @@ public class ReflectionUtils {
      */
     public static Map<String, Object> toObjectMap(Object obj) {
         Field[] allField = getAllField(obj);
-        List<Field> fieldList = Arrays.stream(allField)
-                                      .filter(field -> field.getModifiers() != Modifier.STATIC && field.getModifiers() != Modifier.FINAL)
-                                      .collect(Collectors.toList());
+        List<Field> fieldList = Arrays.stream(allField).filter(field -> field.getModifiers() != Modifier.STATIC && field.getModifiers() != Modifier.FINAL).collect(Collectors.toList());
         Map<String, Object> dataMap = new HashMap<>(allField.length);
         for (Field field : fieldList) {
             Object fieldValue = getFieldValue(field, obj);
