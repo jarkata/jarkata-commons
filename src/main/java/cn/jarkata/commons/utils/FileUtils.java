@@ -118,8 +118,7 @@ public class FileUtils {
      * @param outputStream 输出流
      */
     public static void copy(InputStream inputStream, OutputStream outputStream) {
-        try (BufferedInputStream bis = new BufferedInputStream(inputStream);
-             BufferedOutputStream fos = new BufferedOutputStream(outputStream)) {
+        try (BufferedInputStream bis = new BufferedInputStream(inputStream); BufferedOutputStream fos = new BufferedOutputStream(outputStream)) {
             byte[] buffer = new byte[1024];
             int len;
             while ((len = bis.read(buffer)) > 0) {
@@ -160,8 +159,7 @@ public class FileUtils {
 
     public static int appendData(byte[] data, File targetFile) throws IOException {
         ensureDirectory(targetFile);
-        try (RandomAccessFile accessFile = new RandomAccessFile(targetFile, "rw");
-             FileChannel fileChannel = accessFile.getChannel()) {
+        try (RandomAccessFile accessFile = new RandomAccessFile(targetFile, "rw"); FileChannel fileChannel = accessFile.getChannel()) {
             long size = fileChannel.size();
             fileChannel.position(size);
             ByteBuffer buffer = ByteBuffer.wrap(data);
@@ -178,9 +176,9 @@ public class FileUtils {
 
     public static InputStream getStream(String fileName) {
         fileName = StringUtils.trimToEmpty(fileName);
-        InputStream resource = FileUtils.class.getClassLoader().getResourceAsStream(fileName);
+        InputStream resource = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName);
         if (Objects.isNull(resource)) {
-            resource = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName);
+            resource = FileUtils.class.getClassLoader().getResourceAsStream(fileName);
         }
         if (Objects.isNull(resource)) {
             resource = ClassLoader.getSystemClassLoader().getResourceAsStream(fileName);
@@ -192,7 +190,8 @@ public class FileUtils {
         List<String> lineList = new ArrayList<>();
         String line;
         try (BufferedInputStream bis = new BufferedInputStream(inputStream);
-             InputStreamReader isr = new InputStreamReader(bis); BufferedReader br = new BufferedReader(isr);) {
+             InputStreamReader isr = new InputStreamReader(bis);
+             BufferedReader br = new BufferedReader(isr);) {
             while (Objects.nonNull(line = br.readLine())) {
                 lineList.add(line);
             }
