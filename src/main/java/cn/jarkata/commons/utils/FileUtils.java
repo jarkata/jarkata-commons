@@ -1,5 +1,7 @@
 package cn.jarkata.commons.utils;
 
+import cn.jarkata.commons.exception.FileException;
+
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -124,8 +126,8 @@ public class FileUtils {
             while ((len = bis.read(buffer)) > 0) {
                 fos.write(buffer, 0, len);
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new FileException(e, "Copy Stream Failed");
         }
     }
 
@@ -144,7 +146,7 @@ public class FileUtils {
 
     }
 
-    public static void write(File file, String message) throws IOException {
+    public static void write(File file, String message) {
         if (Objects.isNull(file)) {
             return;
         }
@@ -154,16 +156,20 @@ public class FileUtils {
         }
         try (OutputStream outputStream = Files.newOutputStream(file.toPath(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
             outputStream.write(message.getBytes(StandardCharsets.UTF_8));
+        } catch (Exception ex) {
+            throw new FileException(ex, "Save Data Failed,File=" + file);
         }
     }
 
-    public static int appendData(byte[] data, File targetFile) throws IOException {
+    public static int appendData(byte[] data, File targetFile) {
         ensureDirectory(targetFile);
         try (RandomAccessFile accessFile = new RandomAccessFile(targetFile, "rw"); FileChannel fileChannel = accessFile.getChannel()) {
             long size = fileChannel.size();
             fileChannel.position(size);
             ByteBuffer buffer = ByteBuffer.wrap(data);
             return fileChannel.write(buffer);
+        } catch (Exception ex) {
+            throw new FileException(ex, "AppendData Failed,File=" + targetFile);
         }
     }
 
@@ -173,6 +179,23 @@ public class FileUtils {
         return new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8));
     }
 
+    public static URL getURL(String fileName) {
+        fileName = StringUtils.trimToEmpty(fileName);
+        URL resource = Thread.currentThread().getContextClassLoader().getResource(fileName);
+        if (Objects.isNull(resource)) {
+            resource = FileUtils.class.getClassLoader().getResource(fileName);
+        }
+        if (Objects.isNull(resource)) {
+            resource = ClassLoader.getSystemClassLoader().getResource(fileName);
+        }
+        return resource;
+    }
+
+    public static File getFile(String fileName) {
+        URL resource = getURL(fileName);
+        Objects.requireNonNull(resource, fileName + " Not Exist");
+        return new File(resource.getFile());
+    }
 
     public static InputStream getStream(String fileName) {
         fileName = StringUtils.trimToEmpty(fileName);
@@ -189,14 +212,12 @@ public class FileUtils {
     public static List<String> readLines(InputStream inputStream) {
         List<String> lineList = new ArrayList<>();
         String line;
-        try (BufferedInputStream bis = new BufferedInputStream(inputStream);
-             InputStreamReader isr = new InputStreamReader(bis);
-             BufferedReader br = new BufferedReader(isr);) {
+        try (BufferedInputStream bis = new BufferedInputStream(inputStream); InputStreamReader isr = new InputStreamReader(bis); BufferedReader br = new BufferedReader(isr);) {
             while (Objects.nonNull(line = br.readLine())) {
                 lineList.add(line);
             }
         } catch (Exception exception) {
-            throw new IllegalArgumentException(exception);
+            throw new FileException(exception);
         }
         return lineList;
     }
@@ -204,15 +225,14 @@ public class FileUtils {
 
     public static ByteArrayOutputStream toByteStream(InputStream fis) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        try (BufferedInputStream bis = new BufferedInputStream(fis);
-             BufferedOutputStream bufferedOs = new BufferedOutputStream(bos)) {
+        try (BufferedInputStream bis = new BufferedInputStream(fis); BufferedOutputStream bufferedOs = new BufferedOutputStream(bos)) {
             byte[] buff = new byte[1024];
             int len;
             while ((len = bis.read(buff)) != -1) {
                 bufferedOs.write(buff, 0, len);
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileException(e);
         }
         return bos;
     }
