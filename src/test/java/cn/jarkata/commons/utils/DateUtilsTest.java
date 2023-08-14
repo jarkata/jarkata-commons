@@ -135,6 +135,11 @@ public class DateUtilsTest {
 
     @Test
     public void toDate() {
+        Date date = DateUtils.toDate(LocalDate.of(2023, 8, 14));
+        Assert.assertNotNull(date);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+        String formatStr = dateFormat.format(date);
+        Assert.assertEquals("20230814000000", formatStr);
     }
 
     @Test
@@ -157,15 +162,97 @@ public class DateUtilsTest {
     public void toBasicDate() {
     }
 
-    @Test
-    public void toIsoDate() {
-    }
 
     @Test
     public void formatIsoDate() {
+        LocalDateTime localDate = LocalDateTime.of(2023, 8, 14, 12, 3, 1);
+        String basicDate = DateUtils.formatIsoDate(localDate);
+        Assert.assertNotNull(basicDate);
+        Assert.assertEquals("2023-08-14", basicDate);
+    }
+
+    @Test
+    public void testFormatIsoDate() {
+        LocalDate localDate = LocalDate.of(2023, 8, 14);
+        String basicDate = DateUtils.formatIsoDate(localDate);
+        Assert.assertNotNull(basicDate);
+        Assert.assertEquals("2023-08-14", basicDate);
     }
 
     @Test
     public void formatBasicDate() {
+        LocalDateTime localDate = LocalDateTime.of(2023, 8, 14, 12, 3, 1);
+        String basicDate = DateUtils.formatBasicDate(localDate);
+        Assert.assertNotNull(basicDate);
+        Assert.assertEquals("20230814", basicDate);
+    }
+
+    @Test
+    public void testTestFormatBasicDate() {
+        LocalDate localDate = LocalDate.of(2023, 8, 14);
+        String basicDate = DateUtils.formatBasicDate(localDate);
+        Assert.assertNotNull(basicDate);
+        Assert.assertEquals("20230814", basicDate);
+    }
+
+    @Test
+    public void testFormatStdIsoDateTime() {
+        LocalDateTime localDate = LocalDateTime.of(2023, 8, 14, 12, 3, 1);
+        String basicDate = DateUtils.formatStdIsoDateTime(localDate);
+        Assert.assertNotNull(basicDate);
+        Assert.assertEquals("2023-08-14T12:03:01", basicDate);
+    }
+
+    @Test
+    public void testFormatIsoDateTime() {
+        LocalDateTime localDate = LocalDateTime.of(2023, 8, 14, 12, 3, 1);
+        String basicDate = DateUtils.formatIsoDateTime(localDate);
+        Assert.assertNotNull(basicDate);
+        Assert.assertEquals("20230814120301", basicDate);
+    }
+
+    @Test
+    public void testTestOfLocalDateTime() {
+        LocalDate localDate = LocalDate.of(2023, 8, 14);
+        LocalDateTime localDateTime = DateUtils.ofLocalDateTime(localDate);
+        System.out.println(localDateTime);
+        Assert.assertNotNull(localDateTime);
+        LocalDate timeLocalDate = localDateTime.toLocalDate();
+        Assert.assertEquals(localDate, timeLocalDate);
+        Assert.assertEquals(localDateTime.toLocalTime(), LocalTime.of(0, 0));
+    }
+
+    @Test
+    public void testTestOfLocalDateTime1() {
+        LocalTime localDate = LocalTime.of(12, 8, 14);
+        LocalDateTime localDateTime = DateUtils.ofLocalDateTime(localDate);
+        System.out.println(localDateTime);
+        Assert.assertNotNull(localDateTime);
+        Assert.assertEquals(localDateTime.toLocalDate(), LocalDate.now());
+        Assert.assertEquals(localDateTime.toLocalTime(), localDate);
+    }
+
+    @Test
+    public void testTestOfLocalDate() {
+        LocalDateTime localDate = LocalDateTime.of(2023, 8, 14, 12, 3, 1);
+        LocalDate ofLocalDate = DateUtils.ofLocalDate(localDate);
+        Assert.assertNotNull(ofLocalDate);
+        Assert.assertEquals(ofLocalDate, LocalDate.of(2023, 8, 14));
+    }
+
+    @Test
+    public void testTestOfLocalTime() {
+        LocalDateTime localDate = LocalDateTime.of(2023, 8, 14, 12, 3, 1);
+        LocalTime ofLocalDate = DateUtils.ofLocalTime(localDate);
+        Assert.assertNotNull(ofLocalDate);
+        Assert.assertEquals(ofLocalDate, LocalTime.of(12, 3, 1));
+    }
+
+    @Test
+    public void testTestOfInstant() {
+        LocalDateTime localDate = LocalDateTime.of(2023, 8, 14, 12, 3, 1);
+        Instant instant = DateUtils.ofInstant(localDate);
+        Assert.assertNotNull(instant);
+        Assert.assertEquals(instant.toString(), "2023-08-14T04:03:01Z");
     }
 }

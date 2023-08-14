@@ -3,7 +3,7 @@ package cn.jarkata.commons.idcreator;
 import cn.jarkata.commons.idcreator.impl.SnowflakeIdCreator;
 import cn.jarkata.commons.utils.DateUtils;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class IdFactory {
@@ -35,6 +35,6 @@ public class IdFactory {
                 creatorId.insert(0, "0");
             }
         }
-        return DateUtils.toBasicDate(LocalDate.now()) + creatorId;
+        return DateUtils.formatBasicDate(LocalDateTime.now()) + creatorId;
     }
 }
