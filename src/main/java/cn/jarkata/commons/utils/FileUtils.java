@@ -19,6 +19,12 @@ public class FileUtils {
 
     public static final String EMPTY_STR = "";
 
+    /**
+     * 去除路径中多余的字符
+     *
+     * @param path 路径
+     * @return 去除之后的路径
+     */
     public static String trimPath(String path) {
         if (StringUtils.isBlank(path)) {
             return EMPTY_STR;
@@ -28,6 +34,13 @@ public class FileUtils {
         return path;
     }
 
+    /**
+     * 去除路径的后缀
+     *
+     * @param filePath 路径
+     * @param suffix   后缀
+     * @return 去除之后的路径
+     */
     public static String trimSuffix(String filePath, String suffix) {
         if (StringUtils.isBlank(filePath)) {
             return EMPTY_STR;
@@ -39,6 +52,9 @@ public class FileUtils {
     public static String trimPrefix(String filePath, String prefix) {
         if (StringUtils.isBlank(filePath)) {
             return EMPTY_STR;
+        }
+        if (StringUtils.length(filePath) < StringUtils.length(prefix)) {
+            throw new IllegalArgumentException("args invalid,filePath=" + filePath + ",prefix=" + prefix);
         }
         filePath = filePath.substring(prefix.length());
         return filePath;
@@ -120,7 +136,8 @@ public class FileUtils {
      * @param outputStream 输出流
      */
     public static void copy(InputStream inputStream, OutputStream outputStream) {
-        try (BufferedInputStream bis = new BufferedInputStream(inputStream); BufferedOutputStream fos = new BufferedOutputStream(outputStream)) {
+        try (BufferedInputStream bis = new BufferedInputStream(inputStream);
+             BufferedOutputStream fos = new BufferedOutputStream(outputStream)) {
             byte[] buffer = new byte[1024];
             int len;
             while ((len = bis.read(buffer)) > 0) {
@@ -163,7 +180,8 @@ public class FileUtils {
 
     public static int appendData(byte[] data, File targetFile) {
         ensureDirectory(targetFile);
-        try (RandomAccessFile accessFile = new RandomAccessFile(targetFile, "rw"); FileChannel fileChannel = accessFile.getChannel()) {
+        try (RandomAccessFile accessFile = new RandomAccessFile(targetFile, "rw");
+             FileChannel fileChannel = accessFile.getChannel()) {
             long size = fileChannel.size();
             fileChannel.position(size);
             ByteBuffer buffer = ByteBuffer.wrap(data);
@@ -212,7 +230,8 @@ public class FileUtils {
     public static List<String> readLines(InputStream inputStream) {
         List<String> lineList = new ArrayList<>();
         String line;
-        try (BufferedInputStream bis = new BufferedInputStream(inputStream); InputStreamReader isr = new InputStreamReader(bis); BufferedReader br = new BufferedReader(isr);) {
+        try (BufferedInputStream bis = new BufferedInputStream(inputStream);
+             InputStreamReader isr = new InputStreamReader(bis); BufferedReader br = new BufferedReader(isr);) {
             while (Objects.nonNull(line = br.readLine())) {
                 lineList.add(line);
             }
@@ -225,7 +244,8 @@ public class FileUtils {
 
     public static ByteArrayOutputStream toByteStream(InputStream fis) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        try (BufferedInputStream bis = new BufferedInputStream(fis); BufferedOutputStream bufferedOs = new BufferedOutputStream(bos)) {
+        try (BufferedInputStream bis = new BufferedInputStream(fis);
+             BufferedOutputStream bufferedOs = new BufferedOutputStream(bos)) {
             byte[] buff = new byte[1024];
             int len;
             while ((len = bis.read(buff)) != -1) {

@@ -7,7 +7,6 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.List;
 
 public class FileUtilsTest {
@@ -36,5 +35,23 @@ public class FileUtilsTest {
     public void testTrimPrefix() {
         String trimPrefix = FileUtils.trimPrefix("C:/d/test.txt", "C:/");
         Assert.assertEquals("d/test.txt", trimPrefix);
+    }
+
+    @Test
+    public void trimPath() {
+        String path = FileUtils.trimPath("//fsadf//afsdf");
+        Assert.assertEquals(path, "/fsadf/afsdf");
+    }
+
+    @Test
+    public void trimSuffix() {
+        String path = FileUtils.trimSuffix("/fsadf/afsdf.txt", ".txt");
+        Assert.assertEquals(path, "/fsadf/afsdf");
+    }
+
+    @Test
+    public void trimPrefix() {
+        String path = FileUtils.trimPrefix("/fsadf/afsdf.txt", "/fsadf/");
+        Assert.assertEquals(path, "afsdf.txt");
     }
 }
