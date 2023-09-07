@@ -224,6 +224,7 @@ public class FileUtils {
         if (Objects.isNull(resource)) {
             resource = ClassLoader.getSystemClassLoader().getResourceAsStream(fileName);
         }
+        Objects.requireNonNull(resource, fileName + " Not Found");
         return resource;
     }
 
@@ -231,7 +232,7 @@ public class FileUtils {
         List<String> lineList = new ArrayList<>();
         String line;
         try (BufferedInputStream bis = new BufferedInputStream(inputStream);
-             InputStreamReader isr = new InputStreamReader(bis); BufferedReader br = new BufferedReader(isr);) {
+             InputStreamReader isr = new InputStreamReader(bis); BufferedReader br = new BufferedReader(isr)) {
             while (Objects.nonNull(line = br.readLine())) {
                 lineList.add(line);
             }

@@ -7,6 +7,7 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.List;
 
 public class FileUtilsTest {
@@ -53,5 +54,28 @@ public class FileUtilsTest {
     public void trimPrefix() {
         String path = FileUtils.trimPrefix("/fsadf/afsdf.txt", "/fsadf/");
         Assert.assertEquals(path, "afsdf.txt");
+    }
+
+    @Test
+    public void toURL() {
+        List<URL> list = FileUtils.toURL(new File("test.properties"));
+        Assert.assertNotNull(list);
+        System.out.println(list);
+    }
+
+
+    @Test
+    public void toInputStream() {
+        InputStream stream = FileUtils.toInputStream("23434");
+        Assert.assertNotNull(stream);
+    }
+
+    @Test
+    public void toFiles() {
+        List<URL> list = FileUtils.toURL(new File("test.properties"));
+        Assert.assertNotNull(list);
+        List<File> fileList = FileUtils.toFiles(list.stream().map(URL::getFile).toArray(String[]::new));
+        System.out.println(fileList);
+        Assert.assertNotNull(fileList);
     }
 }
