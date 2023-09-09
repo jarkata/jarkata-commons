@@ -124,7 +124,7 @@ public class SnowflakeIdCreator implements IdCreator {
      */
     @Override
     public long createId(long workId) {
-        logger.info("workId={}", workId);
+        logger.debug("workId={}", workId);
         if (workId > MAX_WORK_ID) {
             throw new IllegalArgumentException("workId more than " + MAX_WORK_ID);
         }
