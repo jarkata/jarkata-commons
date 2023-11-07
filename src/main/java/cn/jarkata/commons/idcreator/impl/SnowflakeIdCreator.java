@@ -59,9 +59,7 @@ public class SnowflakeIdCreator implements IdCreator {
     private static final long DEFAULT_TIME_EPOCH = 946656000000L;
     // 1年时间的毫秒值
     private static final long DEFAULT_BASE_BACKUP_MILLS = 365 * 24 * 3600 * 1000L;
-
-    private final Object lock = new Object();
-
+    
     public SnowflakeIdCreator() {
         this(DEFAULT_TIME_EPOCH, DEFAULT_BASE_BACKUP_MILLS);
     }
