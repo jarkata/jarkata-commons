@@ -2,24 +2,27 @@ package cn.jarkata.commons.idcreator;
 
 import cn.jarkata.commons.idcreator.impl.SnowflakeIdCreator;
 import cn.jarkata.commons.utils.DateUtils;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
 
 public class SnowflakeIdCreatorTest {
 
-    @Test
-    public void getId() {
-
-        LocalDateTime baseLocalTime = LocalDateTime.of(1970, 1, 1, 0, 0, 0);
-        long millis = DateUtils.toMillis(baseLocalTime);
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetId_MoreThanOneYear() {
         SnowflakeIdCreator snowflakeIdCreator = new SnowflakeIdCreator();
-
-        snowflakeIdCreator.setCurrentTime(LocalDateTime.of(2020, 11, 20, 12, 59, 59));
+        LocalDateTime localDateTime = LocalDateTime.now().minusYears(1);
+        snowflakeIdCreator.setCurrentTime(localDateTime);
         long id5 = snowflakeIdCreator.createId(2);
         System.out.println(id5);
+    }
 
-        snowflakeIdCreator.setCurrentTime(LocalDateTime.of(2020, 12, 31, 12, 59, 59));
+    @Test
+    public void getId() {
+        SnowflakeIdCreator snowflakeIdCreator = new SnowflakeIdCreator();
+        LocalDateTime localDateTime1 = LocalDateTime.now().minusMonths(11);
+        snowflakeIdCreator.setCurrentTime(localDateTime1);
         long id4 = snowflakeIdCreator.createId(1);
         System.out.println(id4);
 
@@ -41,9 +44,8 @@ public class SnowflakeIdCreatorTest {
         String id = IdFactory.createId(1, 27);
         System.out.println(id);
         long start = System.currentTimeMillis();
-
         String id2 = IdFactory.createId(1, 31);
-
+        Assert.assertNotNull(id2);
         long dur = System.currentTimeMillis() - start;
 
         System.out.println(dur);
@@ -60,10 +62,4 @@ public class SnowflakeIdCreatorTest {
 
     }
 
-
-    @Test
-    public void testWorkId() {
-        long id = 0L << 12;
-        System.out.println(id);
-    }
 }
