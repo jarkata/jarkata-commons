@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Objects;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class SnowflakeIdCreator implements IdCreator {
 
@@ -32,27 +33,25 @@ public class SnowflakeIdCreator implements IdCreator {
     /**
      * 序列的位数
      */
-    private final long sequenceBits = 12;
+    private static final long sequenceBits = 12;
     /**
      * workId左移位数
      */
-    private final long workIdShift = sequenceBits;
+    private static final long workIdShift = sequenceBits;
     /**
      * 时间戳左移位数
      */
-    private final long timestampShift = sequenceBits + workIdBits;
+    private static final long timestampShift = sequenceBits + workIdBits;
     /**
      * 取sequence的低12位
      */
-    private final long sequenceMask = ~(-1L << sequenceBits);
+    private static final long sequenceMask = ~(-1L << sequenceBits);
 
     private static final Random random = new Random();
 
-    private long fixStepMills;
-
-    private long lastTimestamp;
-
-    private long sequence = 0L;
+    private static final AtomicLong fixStepAtomic = new AtomicLong(0);
+    private static final AtomicLong lastTimestampAtomic = new AtomicLong(0);
+    private static final AtomicLong sequenceAtomic = new AtomicLong(0);
 
     private LocalDateTime currentTime;
 
@@ -92,7 +91,7 @@ public class SnowflakeIdCreator implements IdCreator {
      * @return 返回根据时间戳
      */
     private long currentBaseTime() {
-        long baseTimeEpoch = baseBackupMills - fixStepMills;
+        long baseTimeEpoch = baseBackupMills - fixStepAtomic.get();
         if (baseTimeEpoch <= 0) {
             throw new IllegalArgumentException("time back to long");
         }
@@ -128,6 +127,7 @@ public class SnowflakeIdCreator implements IdCreator {
         if (workId > MAX_WORK_ID) {
             throw new IllegalArgumentException("workId more than " + MAX_WORK_ID);
         }
+        long lastTimestamp = lastTimestampAtomic.get();
         long timestamp = currentBaseTime();
         if (timestamp < lastTimestamp) {
             long offset = lastTimestamp - timestamp;
@@ -140,27 +140,29 @@ public class SnowflakeIdCreator implements IdCreator {
                 }
             } else {
                 //超过5ms的时间倒退，则直接修复
-                this.fixStepMills = offset;
+                fixStepAtomic.set(offset);
             }
+            lastTimestamp = lastTimestampAtomic.get();
             timestamp = currentBaseTime();
             if (timestamp < lastTimestamp) {
-                this.fixStepMills = lastTimestamp - timestamp;
-                timestamp = currentBaseTime();
+                fixStepAtomic.set(lastTimestamp - timestamp);
+                timestamp = tilNextTimestamp(lastTimestamp);
             }
         }
+        lastTimestamp = lastTimestampAtomic.get();
         //最后的时间戳与当前时间相等
         if (lastTimestamp == timestamp) {
-            synchronized (lock) {
-                sequence = (sequence + 1) & sequenceMask;
-            }
-            if (sequence == 0) {
-                sequence = random.nextInt(100);
+            sequenceAtomic.set(sequenceAtomic.incrementAndGet() & sequenceMask);
+            if (sequenceAtomic.get() == 0) {
+                long sequence = random.nextInt(100);
+                sequenceAtomic.set(sequence);
                 timestamp = tilNextTimestamp(lastTimestamp);
             }
         } else {
-            sequence = random.nextInt(100);
+            long sequence = random.nextInt(199);
+            sequenceAtomic.set(sequence);
         }
-        this.lastTimestamp = timestamp;
-        return (timestamp - timeEpoch) << timestampShift | workId << workIdShift | sequence;
+        lastTimestampAtomic.set(timestamp);
+        return (timestamp - timeEpoch) << timestampShift | workId << workIdShift | sequenceAtomic.get();
     }
 }
