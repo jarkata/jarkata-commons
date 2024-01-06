@@ -125,7 +125,7 @@ public class SnowflakeIdCreator implements IdCreator {
      * @return 返回19位的long值
      */
     @Override
-    public long createId(long workId) {
+    public synchronized long createId(long workId) {
         logger.debug("workId={}", workId);
         if (workId > MAX_WORK_ID) {
             throw new IllegalArgumentException("workId more than " + MAX_WORK_ID);
