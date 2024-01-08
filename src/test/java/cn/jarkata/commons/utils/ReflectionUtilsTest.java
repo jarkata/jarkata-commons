@@ -15,14 +15,25 @@ public class ReflectionUtilsTest {
     public void testInvokeMethod() {
         Card card = new Card();
         Object setTitle = ReflectionUtils.invokeMethod(card, "setTitle", new Object[]{"test title"});
-        System.out.println(setTitle);
-        System.out.println(card.getTitle());
+        Assert.assertNull(setTitle);
+        Assert.assertEquals(card.getTitle(), "test title");
     }
+
+    @Test
+    public void testPrivInvokeMethod() {
+        Card card = new Card();
+        Object setTitle = ReflectionUtils.invokeMethod(card, "setTitle", new Object[]{"test title"});
+        Assert.assertNull(setTitle);
+        Object titleStr = ReflectionUtils.invokeMethod(card, "getTitleStr");
+        System.out.println(titleStr);
+        Assert.assertEquals(card.getTitle(), "test title");
+    }
+
 
     @Test
     public void testGetDeclaredMethod() {
         Card card = new Card();
-        List<Method> declaredMethod = ReflectionUtils.getDeclaredMethod(card, "setTitle");
+        List<Method> declaredMethod = ReflectionUtils.getDeclaredMethodList(card, "setTitle");
         System.out.println(declaredMethod);
     }
 
@@ -34,12 +45,30 @@ public class ReflectionUtilsTest {
         System.out.println(card.getTitle());
     }
 
+    @Test
+    public void getDeclaredMethod() {
+        Method getTitle = ReflectionUtils.getDeclaredMethod(Card.class, "getTitle");
+        Objects.requireNonNull(getTitle);
+        Assert.assertEquals(getTitle.getName(), "getTitle");
+    }
+
+    @Test
+    public void getTitleStr() {
+        Method getTitle = ReflectionUtils.getDeclaredMethod(Card.class, "getTitleStr");
+        Objects.requireNonNull(getTitle);
+        Assert.assertEquals(getTitle.getName(), "getTitleStr");
+    }
+
     static class Card {
         private static final String str = "123";
 
         public String title;
 
         public String getTitle() {
+            return title;
+        }
+
+        private String getTitleStr() {
             return title;
         }
 
