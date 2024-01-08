@@ -62,7 +62,7 @@ public class DateUtils {
         if (Objects.isNull(localDate)) {
             return null;
         }
-        return LocalDateTime.of(localDate, LocalTime.of(0, 0));
+        return LocalDateTime.of(localDate, LocalTime.of(0, 0, 0, 0));
     }
 
     public static LocalDateTime ofLocalDateTime(LocalTime localTime) {
@@ -159,7 +159,7 @@ public class DateUtils {
             if (Objects.isNull(localDate)) {
                 return null;
             }
-            return LocalDateTime.of(localDate, LocalTime.of(0, 0, 0));
+            return LocalDateTime.of(localDate, LocalTime.of(0, 0, 0, 0));
         }
         if (StringUtils.length(localDateTimeStr) == 14) {
             return LocalDateTime.parse(localDateTimeStr, ISO_DATETIME2);
@@ -215,7 +215,7 @@ public class DateUtils {
         if (Objects.isNull(localDate)) {
             return null;
         }
-        LocalDateTime localDateTime = LocalDateTime.of(localDate, LocalTime.of(0, 0, 0));
+        LocalDateTime localDateTime = LocalDateTime.of(localDate, LocalTime.of(0, 0, 0, 0));
         Instant instant = localDateTime.atZone(ZoneId.systemDefault()).toInstant();
         return Date.from(instant);
     }
@@ -256,7 +256,7 @@ public class DateUtils {
         if (localDate == null) {
             return -1;
         }
-        LocalDateTime localDateTime = LocalDateTime.of(localDate, LocalTime.of(0, 0, 0));
+        LocalDateTime localDateTime = LocalDateTime.of(localDate, LocalTime.of(0, 0, 0, 0));
         return toMillis(localDateTime);
     }
 
@@ -325,6 +325,10 @@ public class DateUtils {
         return dateTime.format(DateTimeFormatter.ISO_DATE);
     }
 
+    /**
+     * @param dateTime 日期
+     * @return yyyy-MM-dd格式的日期
+     */
     public static String formatIsoDate(LocalDate dateTime) {
         if (Objects.isNull(dateTime)) {
             return JarkataConstants.EMPTY_STR;
