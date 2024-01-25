@@ -10,6 +10,7 @@ import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -136,8 +137,7 @@ public class FileUtils {
      * @param outputStream 输出流
      */
     public static void copy(InputStream inputStream, OutputStream outputStream) {
-        try (BufferedInputStream bis = new BufferedInputStream(inputStream);
-             BufferedOutputStream fos = new BufferedOutputStream(outputStream)) {
+        try (BufferedInputStream bis = new BufferedInputStream(inputStream); BufferedOutputStream fos = new BufferedOutputStream(outputStream)) {
             byte[] buffer = new byte[1024];
             int len;
             while ((len = bis.read(buffer)) > 0) {
@@ -146,6 +146,15 @@ public class FileUtils {
         } catch (Exception e) {
             throw new FileException(e, "Copy Stream Failed");
         }
+    }
+
+    public static void copyFile(File sourceFile, File targetFile) {
+        try (FileInputStream fileInputStream = new FileInputStream(sourceFile)) {
+            Files.copy(fileInputStream, targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        } catch (Exception ex) {
+            throw new FileException(ex, "Copy File Exception");
+        }
+
     }
 
     public static boolean ensureDirectory(File file, boolean isFile) {
@@ -178,10 +187,34 @@ public class FileUtils {
         }
     }
 
-    public static int appendData(byte[] data, File targetFile) {
+    /**
+     * 向file中追加内容
+     *
+     * @param file    目标文件
+     * @param content 追加的内容
+     */
+    public static void appendFile(File file, String content) {
+        if (Objects.isNull(file) || StringUtils.isBlank(content)) {
+            return;
+        }
+        try (OutputStream outputStream = Files.newOutputStream(file.toPath(), StandardOpenOption.APPEND)) {
+            outputStream.write(content.getBytes(StandardCharsets.UTF_8));
+            outputStream.flush();
+        } catch (Exception ex) {
+            throw new IllegalArgumentException(ex);
+        }
+    }
+
+    /**
+     * 向文件中追加内容
+     *
+     * @param targetFile 目标文件
+     * @param data       数据
+     * @return 写入文件的数据大小
+     */
+    public static int appendData(File targetFile, byte[] data) {
         ensureDirectory(targetFile);
-        try (RandomAccessFile accessFile = new RandomAccessFile(targetFile, "rw");
-             FileChannel fileChannel = accessFile.getChannel()) {
+        try (RandomAccessFile accessFile = new RandomAccessFile(targetFile, "rw"); FileChannel fileChannel = accessFile.getChannel()) {
             long size = fileChannel.size();
             fileChannel.position(size);
             ByteBuffer buffer = ByteBuffer.wrap(data);
@@ -231,8 +264,7 @@ public class FileUtils {
     public static List<String> readLines(InputStream inputStream) {
         List<String> lineList = new ArrayList<>();
         String line;
-        try (BufferedInputStream bis = new BufferedInputStream(inputStream);
-             InputStreamReader isr = new InputStreamReader(bis); BufferedReader br = new BufferedReader(isr)) {
+        try (BufferedInputStream bis = new BufferedInputStream(inputStream); InputStreamReader isr = new InputStreamReader(bis); BufferedReader br = new BufferedReader(isr)) {
             while (Objects.nonNull(line = br.readLine())) {
                 lineList.add(line);
             }
@@ -245,8 +277,7 @@ public class FileUtils {
 
     public static ByteArrayOutputStream toByteStream(InputStream fis) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        try (BufferedInputStream bis = new BufferedInputStream(fis);
-             BufferedOutputStream bufferedOs = new BufferedOutputStream(bos)) {
+        try (BufferedInputStream bis = new BufferedInputStream(fis); BufferedOutputStream bufferedOs = new BufferedOutputStream(bos)) {
             byte[] buff = new byte[1024];
             int len;
             while ((len = bis.read(buff)) != -1) {
