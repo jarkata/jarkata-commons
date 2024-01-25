@@ -131,6 +131,27 @@ public class FileUtils {
     }
 
     /**
+     * 创建文件
+     *
+     * @param file 文件
+     * @return 创建文件结果
+     */
+    public static boolean createNewFile(File file) {
+        boolean ensured = ensureDirectory(file, true);
+        if (!ensured) {
+            return false;
+        }
+        if (file.exists()) {
+            deleteFile(file);
+        }
+        try {
+            return file.createNewFile();
+        } catch (Exception ex) {
+            throw new FileException(ex);
+        }
+    }
+
+    /**
      * 将input输入流复制至output数据流
      *
      * @param inputStream  输入流
