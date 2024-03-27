@@ -82,6 +82,37 @@ public class FileUtils {
         return Arrays.stream(locations).map(File::new).collect(Collectors.toList());
     }
 
+    public static List<File> listFile(File directory) {
+        List<File> outFileList = new ArrayList<>();
+        int depth = 0;
+        listFile(directory, depth, outFileList);
+        return outFileList;
+    }
+
+    public static List<File> listFile(String directory) {
+        File dirFile = new File(directory);
+        return listFile(dirFile);
+    }
+
+
+    public static void listFile(File directory, int depth, List<File> outFileList) {
+        if (Objects.isNull(directory)) {
+            return;
+        }
+        if (depth > 10) {
+            throw new IllegalArgumentException("文件夹深度超过10层，目前不支持");
+        }
+        depth++;
+        File[] listFiles = Objects.requireNonNull(directory.listFiles(), directory + " not directory");
+        for (File file : listFiles) {
+            if (file.isFile()) {
+                outFileList.add(file);
+            } else {
+                listFile(file, depth, outFileList);
+            }
+        }
+    }
+
 
     /**
      * 清理该目录下的文件

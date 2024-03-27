@@ -78,4 +78,10 @@ public class FileUtilsTest {
         System.out.println(fileList);
         Assert.assertNotNull(fileList);
     }
+
+    @Test
+    public void listFile() {
+        List<File> fileList = FileUtils.listFile("./");
+        System.out.println(fileList);
+    }
 }
