@@ -192,7 +192,29 @@ public final class StringUtils {
     public static String replaceBlank(String str) {
         Matcher matchered8 = compile8.matcher(str);
         if (matchered8.find()) {
-            str = matchered8.replaceAll(" ");
+            str = matchered8.replaceAll(SPACE);
+        }
+        return str;
+    }
+
+    /**
+     * 去除空格,\n、\t,\\及转换字符
+     *
+     * @param str 字符串
+     * @return 字符串
+     */
+    public static String trimSpecialChar(String str) {
+        Matcher matchered3 = compile3.matcher(str);
+        if (matchered3.find()) {
+            str = matchered3.replaceAll("");
+        }
+        Matcher matchered4 = compile4.matcher(str);
+        if (matchered4.find()) {
+            str = matchered4.replaceAll("");
+        }
+        Matcher matchered5 = compile5.matcher(str);
+        if (matchered5.find()) {
+            str = matchered5.replaceAll("");
         }
         return str;
     }
@@ -211,6 +233,7 @@ public final class StringUtils {
         if (isBlank(str)) {
             return "";
         }
+        str = trimSpecialChar(str);
         Matcher matchered = compile.matcher(str);
         if (matchered.find()) {
             str = matchered.replaceAll("{");
@@ -218,18 +241,6 @@ public final class StringUtils {
         Matcher matchered2 = compile2.matcher(str);
         if (matchered2.find()) {
             str = matchered2.replaceAll("}");
-        }
-        Matcher matchered3 = compile3.matcher(str);
-        if (matchered3.find()) {
-            str = matchered3.replaceAll("");
-        }
-        Matcher matchered4 = compile4.matcher(str);
-        if (matchered4.find()) {
-            str = matchered4.replaceAll("");
-        }
-        Matcher matchered5 = compile5.matcher(str);
-        if (matchered5.find()) {
-            str = matchered5.replaceAll("");
         }
         Matcher matchered6 = compile6.matcher(str);
         if (matchered6.find()) {
