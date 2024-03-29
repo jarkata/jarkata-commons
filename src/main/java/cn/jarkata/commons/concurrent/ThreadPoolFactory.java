@@ -4,6 +4,7 @@ import cn.jarkata.commons.JarkataConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Objects;
 import java.util.concurrent.*;
 
 /**
@@ -14,6 +15,9 @@ public class ThreadPoolFactory {
     private static final Logger logger = LoggerFactory.getLogger(ThreadPoolFactory.class);
 
     private static final ConcurrentHashMap<String, ThreadPoolExecutor> THREAD_POOL_CACHE = new ConcurrentHashMap<>();
+
+    private static final Object lock = new Object();
+
 
     /**
      * 获取线程池
@@ -35,7 +39,19 @@ public class ThreadPoolFactory {
      * @return 线程池对象
      */
     public static ThreadPoolExecutor newThreadPool(String poolName, int coreSize, int maxCoreSize) {
-        return THREAD_POOL_CACHE.getOrDefault(poolName, init(poolName, coreSize, maxCoreSize, JarkataConstants.DEFAULT_THREAD_TASK_TIMEOUT, JarkataConstants.DEFAULT_THREAD_POOL_QUEUE, JarkataConstants.DEFAULT_THREAD_CLOSE_TIME_WAIT));
+        ThreadPoolExecutor threadPoolExecutor = THREAD_POOL_CACHE.get(poolName);
+        if (Objects.nonNull(threadPoolExecutor)) {
+            return threadPoolExecutor;
+        }
+        synchronized (lock) {
+            threadPoolExecutor = THREAD_POOL_CACHE.get(poolName);
+            if (Objects.nonNull(threadPoolExecutor)) {
+                return threadPoolExecutor;
+            }
+            threadPoolExecutor = init(poolName, coreSize, maxCoreSize, JarkataConstants.DEFAULT_THREAD_TASK_TIMEOUT, JarkataConstants.DEFAULT_THREAD_POOL_QUEUE, JarkataConstants.DEFAULT_THREAD_CLOSE_TIME_WAIT);
+            THREAD_POOL_CACHE.put(poolName, threadPoolExecutor);
+        }
+        return threadPoolExecutor;
     }
 
     /**
@@ -61,7 +77,19 @@ public class ThreadPoolFactory {
      * @return thread pool
      */
     public static ThreadPoolExecutor newThreadPool(String poolName, int coreSize, int maxCoreSize, int queueSize, int timeout, int waitTimeouts) {
-        return THREAD_POOL_CACHE.getOrDefault(poolName, init(poolName, coreSize, maxCoreSize, timeout, queueSize, waitTimeouts));
+        ThreadPoolExecutor threadPoolExecutor = THREAD_POOL_CACHE.get(poolName);
+        if (Objects.nonNull(threadPoolExecutor)) {
+            return threadPoolExecutor;
+        }
+        synchronized (lock) {
+            threadPoolExecutor = THREAD_POOL_CACHE.get(poolName);
+            if (Objects.nonNull(threadPoolExecutor)) {
+                return threadPoolExecutor;
+            }
+            threadPoolExecutor = init(poolName, coreSize, maxCoreSize, timeout, queueSize, waitTimeouts);
+            THREAD_POOL_CACHE.put(poolName, threadPoolExecutor);
+        }
+        return threadPoolExecutor;
     }
 
     /**
@@ -106,7 +134,19 @@ public class ThreadPoolFactory {
     }
 
     public static ScheduledThreadPoolExecutor newSchedule(String threadName, int coreSize) {
-        return (ScheduledThreadPoolExecutor) THREAD_POOL_CACHE.getOrDefault(threadName, initScheduled(threadName, coreSize));
+        ThreadPoolExecutor scheduledThreadPoolExecutor = THREAD_POOL_CACHE.get(threadName);
+        if (Objects.nonNull(scheduledThreadPoolExecutor)) {
+            return (ScheduledThreadPoolExecutor) scheduledThreadPoolExecutor;
+        }
+        synchronized (lock) {
+            scheduledThreadPoolExecutor = THREAD_POOL_CACHE.get(threadName);
+            if (Objects.nonNull(scheduledThreadPoolExecutor)) {
+                return (ScheduledThreadPoolExecutor) scheduledThreadPoolExecutor;
+            }
+            scheduledThreadPoolExecutor = initScheduled(threadName, coreSize);
+            THREAD_POOL_CACHE.put(threadName, scheduledThreadPoolExecutor);
+        }
+        return (ScheduledThreadPoolExecutor) scheduledThreadPoolExecutor;
     }
 
     /**
