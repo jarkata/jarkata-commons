@@ -1,5 +1,6 @@
-package cn.jarkata.commons.utils;
+package cn.jarkata.commons;
 
+import cn.jarkata.commons.utils.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,9 +12,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
 
-public class PropUtils {
+public class Props {
 
-    private static final Logger logger = LoggerFactory.getLogger(PropUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(Props.class);
 
     public static Properties create(String filename) {
         Properties properties = new Properties();
