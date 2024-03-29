@@ -12,7 +12,8 @@ public class DateUtilsTest {
     @Test
     public void toLocalDateTime() {
         LocalDateTime dateTime = DateUtils.toLocalDateTime(System.currentTimeMillis());
-        System.out.println(dateTime);
+        Assert.assertNotNull(dateTime);
+        Assert.assertEquals(dateTime.withNano(0), LocalDateTime.now().withNano(0));
     }
 
     @Test
@@ -90,7 +91,45 @@ public class DateUtilsTest {
     }
 
     @Test
+    public void testParseToDateTime1() {
+        LocalDateTime localDateTime = DateUtils.parseToDateTime("2022-12-11 10:10:11.101");
+        LocalDateTime actual = LocalDateTime.of(2022, 12, 11, 10, 10, 11, 101000000);
+        Assert.assertEquals(localDateTime, actual);
+    }
+
+    @Test
+    public void testParseToDateTime2() {
+        LocalDateTime localDateTime = DateUtils.parseToDateTime("2022-12-11T10:10:11.101");
+        LocalDateTime actual = LocalDateTime.of(2022, 12, 11, 10, 10, 11, 101000000);
+        Assert.assertEquals(localDateTime, actual);
+    }
+
+    @Test
     public void parseToTime() {
+        LocalTime localTime = DateUtils.parseToTime("121100");
+        System.out.println(localTime);
+        Assert.assertEquals(localTime, LocalTime.of(12, 11, 0));
+    }
+
+    @Test
+    public void parseToTime2() {
+        LocalTime localTime = DateUtils.parseToTime("12:11:00");
+        System.out.println(localTime);
+        Assert.assertEquals(localTime, LocalTime.of(12, 11, 0));
+    }
+
+    @Test
+    public void parseToTime3() {
+        LocalTime localTime = DateUtils.parseToTime("12:11");
+        System.out.println(localTime);
+        Assert.assertEquals(localTime, LocalTime.of(12, 11, 0));
+    }
+
+    @Test
+    public void parseToTime4() {
+        LocalTime localTime = DateUtils.parseToTime("1211");
+        System.out.println(localTime);
+        Assert.assertEquals(localTime, LocalTime.of(12, 11, 0));
     }
 
     @Test
@@ -255,4 +294,6 @@ public class DateUtilsTest {
         Assert.assertNotNull(instant);
         Assert.assertEquals(instant.toString(), "2023-08-14T04:03:01Z");
     }
+
+
 }
