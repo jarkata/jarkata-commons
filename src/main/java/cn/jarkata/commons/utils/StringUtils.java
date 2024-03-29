@@ -179,7 +179,6 @@ public final class StringUtils {
     private static final Pattern compile5 = Pattern.compile("\\\t");
     private static final Pattern compile6 = Pattern.compile("\\\"\\[\\{");
     private static final Pattern compile7 = Pattern.compile("\\}\\]\\\"");
-
     private static final Pattern compile8 = Pattern.compile("  ");
 
 
