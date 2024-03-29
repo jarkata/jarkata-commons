@@ -256,6 +256,9 @@ public class ReflectionUtils {
         if (Objects.isNull(obj)) {
             return new HashMap<>(0);
         }
+        if (obj instanceof Map) {
+            return (Map<String, Object>) obj;
+        }
         List<Field> allField = getAllFieldList(obj.getClass());
         List<Field> fieldList = allField.stream().filter(field -> field.getModifiers() != Modifier.STATIC && field.getModifiers() != Modifier.FINAL).collect(Collectors.toList());
         Map<String, Object> dataMap = new HashMap<>(allField.size());

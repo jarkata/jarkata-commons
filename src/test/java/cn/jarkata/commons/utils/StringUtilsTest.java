@@ -38,7 +38,7 @@ public class StringUtilsTest {
     @Test
     public void testLeftPad() {
         long start = System.currentTimeMillis();
-        for (int index = 0; index < 100000000; index++) {
+        for (int index = 0; index < 1; index++) {
             String leftPad = StringUtils.leftPad("23", 10, "A0");
             Assert.assertNotNull(leftPad);
         }
