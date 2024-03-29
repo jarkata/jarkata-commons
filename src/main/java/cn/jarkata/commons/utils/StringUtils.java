@@ -198,7 +198,7 @@ public final class StringUtils {
     }
 
     /**
-     * 去除空格,\n、\t,\\及转换字符
+     * 将\n、\t,\\ 转换为空格
      *
      * @param str 字符串
      * @return 字符串
