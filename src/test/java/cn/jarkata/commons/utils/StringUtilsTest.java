@@ -40,6 +40,7 @@ public class StringUtilsTest {
         long start = System.currentTimeMillis();
         for (int index = 0; index < 100000000; index++) {
             String leftPad = StringUtils.leftPad("23", 10, "A0");
+            Assert.assertNotNull(leftPad);
         }
         long dur = System.currentTimeMillis() - start;
         System.out.println("耗时：" + dur);
@@ -48,6 +49,33 @@ public class StringUtilsTest {
 
     @Test
     public void trimJson() {
-        System.out.println(StringUtils.trimJson("1  2").length());
+        String blank = StringUtils.replaceBlank("1  2");
+        int length = blank.length();
+        Assert.assertEquals(length, 3);
+        Assert.assertEquals("1 2", blank);
+    }
+
+    @Test
+    public void defaultIfBlank() {
+        String blank = StringUtils.defaultIfBlank("1312", "");
+        Assert.assertEquals("1312", blank);
+    }
+
+    @Test
+    public void defaultIfBlank1() {
+        String blank = StringUtils.defaultIfBlank(" ", "123");
+        Assert.assertEquals("123", blank);
+    }
+
+    @Test
+    public void rightPad() {
+        String righted = StringUtils.rightPad("A", 3, "B");
+        Assert.assertEquals("ABB", righted);
+    }
+
+    @Test
+    public void trimToNull() {
+        String trimmed = StringUtils.trimToNull(null);
+        Assert.assertNull(trimmed);
     }
 }

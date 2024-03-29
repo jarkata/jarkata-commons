@@ -28,10 +28,13 @@ public final class StringUtils {
         return !isBlank(str);
     }
 
-    public static String defaultString(String str, String defaultVal) {
-        return defaultIfBlank(str, defaultVal);
-    }
-
+    /**
+     * 如果字符串为空，这返回默认值
+     *
+     * @param str        源字符串
+     * @param defaultVal 默认值
+     * @return 返回处理之后的字符串
+     */
     public static String defaultIfBlank(String str, String defaultVal) {
         return isBlank(str) ? defaultVal : str;
     }
@@ -42,8 +45,8 @@ public final class StringUtils {
      * @param obj 数据
      * @return 去掉空格之后的数据
      */
-    public static String trimBlankToEmpty(Object obj) {
-        return trimToEmpty(obj).trim();
+    public static String trimToEmpty(Object obj) {
+        return toString(obj).trim();
     }
 
     /**
@@ -52,12 +55,11 @@ public final class StringUtils {
      * @param obj 数据
      * @return 处理之后的值
      */
-    public static String trimToEmpty(Object obj) {
+    public static String toString(Object obj) {
         if (obj instanceof String) {
             return ((String) obj);
         }
-        String str = Objects.toString(obj, null);
-        return trimToEmpty(str);
+        return Objects.toString(obj, "");
     }
 
     /**
@@ -147,10 +149,6 @@ public final class StringUtils {
         return builder.substring(0, len);
     }
 
-    public static String trimToEmpty(String str) {
-        return Objects.isNull(str) ? "" : str;
-    }
-
     public static String trimToNull(Object obj) {
         if (obj instanceof String) {
             return ((String) obj).trim();
@@ -174,6 +172,20 @@ public final class StringUtils {
 
 
     /**
+     * 将连续的多个空格替换为单个空格
+     *
+     * @param str 字符串
+     * @return 将连续的多个空格替换为单个空格
+     */
+    public static String replaceBlank(String str) {
+        Matcher matchered8 = compile8.matcher(str);
+        if (matchered8.find()) {
+            str = matchered8.replaceAll(" ");
+        }
+        return str;
+    }
+
+    /**
      * 去除空格,\n、\t,及转换字符
      * <pre>"{ 转换为 {</pre>
      * <pre>}" 转换为 }</pre>
@@ -187,11 +199,6 @@ public final class StringUtils {
         if (isBlank(str)) {
             return "";
         }
-        Matcher matchered8 = compile8.matcher(str);
-        if (matchered8.find()) {
-            str = matchered8.replaceAll(" ");
-        }
-
         Matcher matchered = compile.matcher(str);
         if (matchered.find()) {
             str = matchered.replaceAll("{");
