@@ -100,7 +100,7 @@ public class ReflectionUtilsTest {
 
     @Test
     public void getAllField_Class() {
-        List<Field> fieldList = ReflectionUtils.getFieldList(Card.class);
+        List<Field> fieldList = ReflectionUtils.getAllFieldList(Card.class);
         Assert.assertEquals(2, fieldList.size());
     }
 
@@ -131,7 +131,7 @@ public class ReflectionUtilsTest {
     }
 
     @Test
-    public void getDeclaredField() throws NoSuchFieldException {
+    public void getDeclaredField() {
         Field declaredField = ReflectionUtils.getDeclaredField(Card.class, "title");
         Objects.requireNonNull(declaredField);
         Assert.assertEquals(declaredField.getName(), "title");
