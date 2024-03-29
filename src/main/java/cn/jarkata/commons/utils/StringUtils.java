@@ -28,6 +28,18 @@ public final class StringUtils {
         return !isBlank(str);
     }
 
+    public static String requireNotBlank(String str, IllegalArgumentException exception) {
+        Objects.requireNonNull(exception, "exception must have value");
+        if (isNotBlank(str)) {
+            return str;
+        }
+        throw exception;
+    }
+
+    public static String requireNotBlank(String str, String errorMsg) {
+        return requireNotBlank(str, new IllegalArgumentException(errorMsg));
+    }
+
     /**
      * 如果字符串为空，这返回默认值
      *

@@ -78,4 +78,26 @@ public class StringUtilsTest {
         String trimmed = StringUtils.trimToNull(null);
         Assert.assertNull(trimmed);
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void requireNotBlank() {
+        StringUtils.requireNotBlank("", "ID不能为空");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testRequireNotBlank() {
+        StringUtils.requireNotBlank("", new IllegalArgumentException("ID不能为空"));
+    }
+
+    @Test
+    public void testRequireNotBlank2() {
+        String val = StringUtils.requireNotBlank("1231", new IllegalArgumentException("ID不能为空"));
+        Assert.assertEquals("1231", val);
+    }
+
+    @Test
+    public void testRequireNotBlank3() {
+        String val = StringUtils.requireNotBlank("1231", "ID不能为空");
+        Assert.assertEquals("1231", val);
+    }
 }
