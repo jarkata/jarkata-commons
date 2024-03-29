@@ -45,4 +45,9 @@ public class StringUtilsTest {
         System.out.println("耗时：" + dur);
 
     }
+
+    @Test
+    public void trimJson() {
+        System.out.println(StringUtils.trimJson("1  2").length());
+    }
 }

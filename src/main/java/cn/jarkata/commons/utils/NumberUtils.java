@@ -1,5 +1,6 @@
 package cn.jarkata.commons.utils;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
@@ -7,15 +8,32 @@ import java.util.Objects;
  */
 public final class NumberUtils {
 
+    public static BigDecimal toDecimal(Object obj, BigDecimal defaultVal) {
+        if (obj instanceof BigDecimal) {
+            return (BigDecimal) obj;
+        }
+        String str = Objects.toString(obj, null);
+        if (Objects.isNull(str)) {
+            return defaultVal;
+        }
+        str = StringUtils.trimToEmpty(str);
+        try {
+            return new BigDecimal(str);
+        } catch (Exception ex) {
+            return defaultVal;
+        }
+    }
+
     public static Long toLong(Object obj, Long defaultVal) {
         if (obj instanceof Long) {
             return (Long) obj;
         }
         String str = Objects.toString(obj, null);
         str = StringUtils.trimToEmpty(str);
-        if (Objects.isNull(str)) {
+        if (StringUtils.isBlank(str)) {
             return defaultVal;
         }
+
         try {
             return Long.parseLong(str);
         } catch (Exception ex) {
@@ -29,7 +47,7 @@ public final class NumberUtils {
         }
         String str = Objects.toString(obj, null);
         str = StringUtils.trimToEmpty(str);
-        if (Objects.isNull(str)) {
+        if (StringUtils.isBlank(str)) {
             return defaultVal;
         }
         try {
@@ -45,7 +63,7 @@ public final class NumberUtils {
         }
         String str = Objects.toString(obj, null);
         str = StringUtils.trimToEmpty(str);
-        if (Objects.isNull(str)) {
+        if (StringUtils.isBlank(str)) {
             return defaultVal;
         }
         try {
@@ -61,7 +79,7 @@ public final class NumberUtils {
         }
         String str = Objects.toString(obj, null);
         str = StringUtils.trimToEmpty(str);
-        if (Objects.isNull(str)) {
+        if (StringUtils.isBlank(str)) {
             return defaultVal;
         }
         try {

@@ -1,6 +1,8 @@
 package cn.jarkata.commons.utils;
 
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 字符串工具类
@@ -18,8 +20,8 @@ public final class StringUtils {
         if (Objects.isNull(str)) {
             return true;
         }
-        return str.trim()
-                .length() <= 0;
+        str = str.trim();
+        return length(str) <= 0;
     }
 
     public static boolean isNotBlank(String str) {
@@ -58,8 +60,14 @@ public final class StringUtils {
         return trimToEmpty(str);
     }
 
+    /**
+     * 计算字符串的长度
+     *
+     * @param str 字符串
+     * @return 字符串长度
+     */
     public static int length(String str) {
-        if (isBlank(str)) {
+        if (Objects.isNull(str)) {
             return 0;
         }
         return str.length();
@@ -112,9 +120,9 @@ public final class StringUtils {
         if (isBlank(padStr)) {
             padStr = SPACE;
         }
-        final int padLen = padStr.length();
+        final int padLen = length(padStr);
 
-        final int strLen = str.length();
+        final int strLen = length(str);
         int subLen = len - strLen;
 
         if (subLen <= 0) {
@@ -148,24 +156,70 @@ public final class StringUtils {
             return ((String) obj).trim();
         }
         String str = Objects.toString(obj, null);
-        return trimToNull(str);
+        if (isBlank(str)) {
+            return null;
+        }
+        return str.trim();
     }
 
-    public static String trimToNull(String str) {
-        return isBlank(str) ? null : str.trim();
-    }
+    private static final Pattern compile = Pattern.compile("\\\"\\{");
+    private static final Pattern compile2 = Pattern.compile("\\}\\\"");
+    private static final Pattern compile3 = Pattern.compile("\\\\");
+    private static final Pattern compile4 = Pattern.compile("\\\n");
+    private static final Pattern compile5 = Pattern.compile("\\\t");
+    private static final Pattern compile6 = Pattern.compile("\\\"\\[\\{");
+    private static final Pattern compile7 = Pattern.compile("\\}\\]\\\"");
 
+    private static final Pattern compile8 = Pattern.compile("  ");
+
+
+    /**
+     * 去除空格,\n、\t,及转换字符
+     * <pre>"{ 转换为 {</pre>
+     * <pre>}" 转换为 }</pre>
+     * <pre>"[{ 转换为 [{</pre>
+     * <pre>}]" 转换为 }]</pre>
+     *
+     * @param str 字符串
+     * @return 字符串
+     */
     public static String trimJson(String str) {
         if (isBlank(str)) {
             return "";
         }
-        str = str.replaceAll("\\\"\\{", "{");
-        str = str.replaceAll("\\}\\\"", "}");
-        str = str.replaceAll("\\\\", "");
-        str = str.replaceAll("\\\n", "");
-        str = str.replaceAll("\\\t", "");
-        str = str.replaceAll("\\\"\\[\\{", "[{");
-        str = str.replaceAll("\\}\\]\\\"", "}]");
+        Matcher matchered8 = compile8.matcher(str);
+        if (matchered8.find()) {
+            str = matchered8.replaceAll(" ");
+        }
+
+        Matcher matchered = compile.matcher(str);
+        if (matchered.find()) {
+            str = matchered.replaceAll("{");
+        }
+        Matcher matchered2 = compile2.matcher(str);
+        if (matchered2.find()) {
+            str = matchered2.replaceAll("}");
+        }
+        Matcher matchered3 = compile3.matcher(str);
+        if (matchered3.find()) {
+            str = matchered3.replaceAll("");
+        }
+        Matcher matchered4 = compile4.matcher(str);
+        if (matchered4.find()) {
+            str = matchered4.replaceAll("");
+        }
+        Matcher matchered5 = compile5.matcher(str);
+        if (matchered5.find()) {
+            str = matchered5.replaceAll("");
+        }
+        Matcher matchered6 = compile6.matcher(str);
+        if (matchered6.find()) {
+            str = matchered6.replaceAll("[{");
+        }
+        Matcher matchered7 = compile7.matcher(str);
+        if (matchered7.find()) {
+            str = matchered7.replaceAll("}]");
+        }
         return str;
     }
 
