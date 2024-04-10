@@ -254,14 +254,14 @@ public class ReflectionUtils {
      */
     public static Map<String, Object> toObjectMap(Object obj) {
         if (Objects.isNull(obj)) {
-            return new HashMap<>(0);
+            return new LinkedHashMap<>(0);
         }
         if (obj instanceof Map) {
-            return (Map<String, Object>) obj;
+            return (Map<String, Object>) obj;  // unchecked assignment
         }
         List<Field> allField = getAllFieldList(obj.getClass());
         List<Field> fieldList = allField.stream().filter(field -> field.getModifiers() != Modifier.STATIC && field.getModifiers() != Modifier.FINAL).collect(Collectors.toList());
-        Map<String, Object> dataMap = new HashMap<>(allField.size());
+        Map<String, Object> dataMap = new LinkedHashMap<>(allField.size());
         for (Field field : fieldList) {
             Object fieldValue = getFieldValue(field, obj);
             dataMap.put(field.getName(), fieldValue);
