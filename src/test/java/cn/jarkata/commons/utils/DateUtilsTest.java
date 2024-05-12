@@ -296,4 +296,24 @@ public class DateUtilsTest {
     }
 
 
+    @Test
+    public void formatStdIsoDateTime() {
+        LocalDateTime localDate = LocalDateTime.of(2023, 8, 14, 12, 3, 1);
+        String datetime = DateUtils.formatStdIsoDateTime(localDate);
+        Assert.assertEquals(datetime, "2023-08-14T12:03:01");
+    }
+
+    @Test
+    public void formatDateTime() {
+        LocalDateTime localDate = LocalDateTime.of(2023, 8, 14, 12, 3, 1);
+        String datetime = DateUtils.formatDateTime(localDate,DateUtils.ISO_DATETIME1);
+        Assert.assertEquals(datetime, "2023-08-14 12:03:01");
+    }
+
+    @Test
+    public void formatIsoDateTime() {
+        LocalDateTime localDate = LocalDateTime.of(2023, 8, 14, 12, 3, 1);
+        String datetime = DateUtils.formatIsoDateTime(localDate);
+        Assert.assertEquals(datetime, "20230814120301");
+    }
 }

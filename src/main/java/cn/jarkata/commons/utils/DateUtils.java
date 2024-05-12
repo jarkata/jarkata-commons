@@ -18,43 +18,43 @@ public class DateUtils {
      * ISO_DATE_TIME
      * yyyy-MM-dd'T'HH:mm:ss
      */
-    private static final DateTimeFormatter ISO_DATETIME = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+    public static final DateTimeFormatter ISO_DATETIME = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
     /**
      * yyyy-MM-dd'T'HH:mm:ss.SSS
      */
-    private static final DateTimeFormatter ISO_DATETIME4 = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+    public static final DateTimeFormatter ISO_DATETIME4 = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
     /**
      * yyyy-MM-dd HH:mm:ss
      */
-    private static final DateTimeFormatter ISO_DATETIME1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    public static final DateTimeFormatter ISO_DATETIME1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     /**
      * yyyy-MM-dd HH:mm:ss.SSS
      */
-    private static final DateTimeFormatter ISO_DATETIME3 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+    public static final DateTimeFormatter ISO_DATETIME3 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
     /**
      * yyyyMMddHHmmss
      */
-    private static final DateTimeFormatter ISO_DATETIME2 = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+    public static final DateTimeFormatter ISO_DATETIME2 = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
     /**
      * yyyyMMdd格式
      */
-    private static final DateTimeFormatter BASIC_ISO_DATE = DateTimeFormatter.ofPattern("yyyyMMdd");
+    public static final DateTimeFormatter BASIC_ISO_DATE = DateTimeFormatter.ofPattern("yyyyMMdd");
     /**
      * HH:mm:ss
      */
-    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss");
+    public static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss");
     /**
      * HH:mm
      */
-    private static final DateTimeFormatter TIME_FORMATTER2 = DateTimeFormatter.ofPattern("HH:mm");
+    public static final DateTimeFormatter TIME_FORMATTER2 = DateTimeFormatter.ofPattern("HH:mm");
     /**
      * HHmm
      */
-    private static final DateTimeFormatter TIME_FORMATTER3 = DateTimeFormatter.ofPattern("HHmm");
+    public static final DateTimeFormatter TIME_FORMATTER3 = DateTimeFormatter.ofPattern("HHmm");
     /**
      * HHmmss
      */
-    private static final DateTimeFormatter TIME_FORMATTER4 = DateTimeFormatter.ofPattern("HHmmss");
+    public static final DateTimeFormatter TIME_FORMATTER4 = DateTimeFormatter.ofPattern("HHmmss");
 
     /**
      * 解析如下格式的字符串为时间部分
@@ -321,6 +321,21 @@ public class DateUtils {
             return JarkataConstants.EMPTY_STR;
         }
         return dateTime.format(ISO_DATETIME);
+    }
+
+    /**
+     * 转换为ISO标准日期字符串
+     * yyyy-MM-ddTHH:mm:ss
+     * 默认返回为空字符串
+     *
+     * @param dateTime datetime variable
+     * @return yyyy-MM-ddTHH:mm:ss
+     */
+    public static String formatDateTime(LocalDateTime dateTime, DateTimeFormatter formatter) {
+        if (Objects.isNull(dateTime)) {
+            return JarkataConstants.EMPTY_STR;
+        }
+        return dateTime.format(formatter);
     }
 
     /**
