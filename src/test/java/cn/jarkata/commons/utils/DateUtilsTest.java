@@ -4,7 +4,10 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;
-import java.time.*;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Date;
 
 public class DateUtilsTest {
@@ -315,5 +318,11 @@ public class DateUtilsTest {
         LocalDateTime localDate = LocalDateTime.of(2023, 8, 14, 12, 3, 1);
         String datetime = DateUtils.formatIsoDateTime(localDate);
         Assert.assertEquals(datetime, "20230814120301");
+    }
+
+    @Test
+    public void testParseToDateTime3() {
+        LocalDateTime localDateTime = DateUtils.parseToDateTime("2023-12-31T16:00:00.000Z");
+        System.out.println(localDateTime);
     }
 }

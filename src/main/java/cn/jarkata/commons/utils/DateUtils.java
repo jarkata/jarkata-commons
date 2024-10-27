@@ -186,6 +186,7 @@ public class DateUtils {
      * yyyy-MM-dd HH:mm:ss
      * yyyy-MM-dd HH:mm:ss.SSS
      * yyyyMMddHHmmss
+     * 2023-12-31T16:00:00.000Z
      *
      * @param localDateTimeStr 见描述
      * @return LocalDateTime对象
@@ -195,24 +196,32 @@ public class DateUtils {
         if (StringUtils.isBlank(localDateTimeStr)) {
             return null;
         }
-        if (StringUtils.length(localDateTimeStr) == 8 || StringUtils.length(localDateTimeStr) == 10) {
+        //2023-12-31T16:00:00.000Z
+        if (localDateTimeStr.endsWith("Z")) {
+            int length = StringUtils.length(localDateTimeStr);
+            localDateTimeStr = localDateTimeStr.substring(0, length - 1);
+        }
+        int length = StringUtils.length(localDateTimeStr);
+        if (length == 8 || length == 10) {
             LocalDate localDate = parseToDate(localDateTimeStr);
             if (Objects.isNull(localDate)) {
                 return null;
             }
             return LocalDateTime.of(localDate, LocalTime.of(0, 0, 0, 0));
         }
-        if (StringUtils.length(localDateTimeStr) == 23) {
+        length = StringUtils.length(localDateTimeStr);
+        if (length == 23) {
             int indexOf = localDateTimeStr.indexOf("T");
             if (indexOf > 0) {
                 return LocalDateTime.parse(localDateTimeStr, ISO_DATETIME4);
             }
             return LocalDateTime.parse(localDateTimeStr, ISO_DATETIME3);
         }
-        if (StringUtils.length(localDateTimeStr) == 14) {
+
+        if (length == 14) {
             return LocalDateTime.parse(localDateTimeStr, ISO_DATETIME2);
         }
-        if (StringUtils.length(localDateTimeStr) == 19) {
+        if (length == 19) {
             int index = localDateTimeStr.indexOf("T");
             if (index > 0) {
                 return LocalDateTime.parse(localDateTimeStr, ISO_DATETIME);
